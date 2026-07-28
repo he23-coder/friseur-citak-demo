@@ -12,21 +12,19 @@ import { salons, business } from '@/data/site';
   canonicalPath="/kontakt/"
 >
   <PageHero
-    eyebrow="Kontakt"
     title="Haben Sie Fragen? Schreiben Sie uns!"
-    lead="Nutzen Sie unsere Kanäle: Rückruf-Formular, Telefon oder direkt online buchen – wir melden uns schnellstmöglich bei Ihnen."
+    lead="Rückruf-Formular, Telefon oder direkt online buchen – wir melden uns schnellstmöglich bei Ihnen."
     crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Kontakt' }]}
   />
 
   <section class="section">
-    <div class="container contact-grid">
-      <!-- Formular -->
-      <div class="reveal">
-        <p class="eyebrow">Rückruf anfordern</p>
+    <div class="container contact-grid" style="display:grid;gap:2.5rem;grid-template-columns:minmax(0,1fr);">
+      <div class="rv">
+        <p class="meta-label">Rückruf anfordern</p>
         <h2>Wir rufen Sie zurück</h2>
         <p class="muted">
-          Hinterlassen Sie Ihre Daten und Ihren Wunschzeitraum – das Formular öffnet Ihr E-Mail-Programm
-          mit einer vorbereiteten Nachricht an uns.
+          Hinterlassen Sie Ihre Daten und Ihren Wunschzeitraum – das Formular öffnet Ihr
+          E-Mail-Programm mit einer vorbereiteten Nachricht an uns.
         </p>
 
         <div class="form__success" id="form-success" role="status">
@@ -80,7 +78,7 @@ import { salons, business } from '@/data/site';
             <a href="/datenschutz/" style="text-decoration:underline;">Datenschutzerklärung</a>.
           </p>
           <div>
-            <button class="btn btn--gold" type="submit">
+            <button class="btn btn--accent" type="submit">
               <Icon name="mail" size={16} />
               Nachricht vorbereiten
             </button>
@@ -88,13 +86,12 @@ import { salons, business } from '@/data/site';
         </form>
       </div>
 
-      <!-- Kontaktdaten -->
-      <div class="reveal" style="--reveal-delay:.15s;display:grid;gap:1.4rem;align-content:start;">
+      <div class="rv" style="--d:.12s;display:grid;gap:1.4rem;align-content:start;">
         {salons.map((s) => (
-          <div class="contact-card">
-            <p class="eyebrow">{s.city}</p>
+          <div class="info-panel">
+            <p class="meta-label">{s.city}</p>
             <h3>{s.name}</h3>
-            <ul class="contact-list">
+            <ul class="info-list">
               <li><Icon name="pin" size={16} /><span>{s.street}, {s.zip}</span></li>
               {s.hours.map((h) => (
                 <li><Icon name="clock" size={16} /><span>{h.days} {h.time}</span></li>
@@ -102,14 +99,14 @@ import { salons, business } from '@/data/site';
               <li><Icon name="phone" size={16} /><a href={s.phoneHref}>{s.phoneDisplay}</a></li>
             </ul>
             <div class="btn-row">
-              <a class="btn btn--dark btn--sm" href={s.bookingUrl} target="_blank" rel="noopener noreferrer">Termin buchen</a>
+              <a class="btn btn--ink btn--sm" href={s.bookingUrl} target="_blank" rel="noopener noreferrer">Termin vereinbaren</a>
               <a class="btn btn--ghost btn--sm" href={`/salons/${s.id}/`}>Zum Salon</a>
             </div>
           </div>
         ))}
-        <div class="contact-card">
+        <div class="info-panel">
           <h3>Direktkontakt</h3>
-          <ul class="contact-list">
+          <ul class="info-list">
             <li><Icon name="mail" size={16} /><a href={`mailto:${business.email}`}>{business.email}</a></li>
             <li><Icon name="whatsapp" size={16} /><a href={business.whatsapp}>{business.whatsappDisplay}</a></li>
             <li><Icon name="instagram" size={16} /><a href={business.instagram} target="_blank" rel="noopener noreferrer">@hairlounge_by_citak</a></li>
@@ -119,10 +116,9 @@ import { salons, business } from '@/data/site';
     </div>
   </section>
 
-  <section class="section section--warm" aria-labelledby="maps-heading">
+  <section class="section section--raise" aria-labelledby="maps-heading">
     <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Anfahrt</p>
+      <div class="section-head rv">
         <h2 id="maps-heading">So finden Sie uns</h2>
       </div>
       <div class="grid grid--2">
@@ -182,3 +178,9 @@ import { salons, business } from '@/data/site';
     );
   </script>
 </Base>
+
+<style>
+  @media (min-width: 960px) {
+    .contact-grid { grid-template-columns: 1.05fr 0.95fr; gap: 4rem; }
+  }
+</style>

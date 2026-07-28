@@ -11,32 +11,29 @@ const { prices } = Astro.props;
 
 <div>
   {prices.groups.map((group) => (
-    <section class="price-group reveal">
+    <section class="price-group rv">
       <div class="price-group__title">
         <h3>{group.title}</h3>
-        {group.twoCols && (
-          <span class="price-cols-head" style="margin-left:auto;text-align:right;">
-            bis Kinn&nbsp;&nbsp;|&nbsp;&nbsp;ab Kinn
-          </span>
-        )}
+        {group.twoCols && <span class="price-group__cols">bis Kinn&nbsp;&nbsp;·&nbsp;&nbsp;ab Kinn</span>}
       </div>
-      <table class="price-table">
-        <tbody>
-          {group.rows.map((row) => (
-            <tr>
-              <td>{row.label}</td>
-              {group.twoCols ? (
-                <>
-                  <td style="width:110px;">{row.short}</td>
-                  <td style="width:110px;">{row.long}</td>
-                </>
-              ) : (
-                <td>{row.short}</td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div class="price-rows">
+        {group.rows.map((row) => (
+          <div class="price-row">
+            <span class="price-row__label">{row.label}</span>
+            {group.twoCols ? (
+              <span class="price-row__prices">
+                {[row.short, row.long].map((p) => (
+                  <span class={p?.includes('Anfrage') ? 'is-na' : ''}>{p}</span>
+                ))}
+              </span>
+            ) : (
+              <span class="price-row__prices">
+                <span class={row.short?.includes('Anfrage') ? 'is-na' : ''}>{row.short}</span>
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
     </section>
   ))}
   <p class="price-note">{priceNote}</p>

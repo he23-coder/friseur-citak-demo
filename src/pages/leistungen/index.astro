@@ -2,9 +2,18 @@
 import Base from '@/layouts/Base.astro';
 import PageHero from '@/components/PageHero.astro';
 import Icon from '@/components/Icon.astro';
-import Partners from '@/components/Partners.astro';
+import { Image } from 'astro:assets';
 import { services, categories } from '@/data/services';
-import ServiceCard from '@/components/ServiceCard.astro';
+
+const svcImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/services/*', { eager: true });
+const svcImg = (file: string) => Object.entries(svcImages).find(([k]) => k.endsWith(`/${file}`))?.[1].default;
+
+const catLead: Record<string, string> = {
+  'Schnitt & Styling': 'Präzision, die zu Ihrem Typ passt – vom klassischen Façon bis zu modernen Beach Waves.',
+  'Farbe & Strähnen': 'Von natürlichen Verläufen bis zur permanenten Coloration – mit Farbprodukten von Wella.',
+  'Pflege & Extras': 'Intensivpflege und Details, die den Unterschied machen.',
+  Extensions: 'Haarverlängerung und -verdichtung mit Ultraschall von Great Lengths.',
+};
 ---
 
 <Base
@@ -13,46 +22,59 @@ import ServiceCard from '@/components/ServiceCard.astro';
   canonicalPath="/leistungen/"
 >
   <PageHero
-    eyebrow="Leistungen"
-    title="Unsere Leistungen für Ihr Haar"
-    lead="Mit Liebe und Leidenschaft widmet sich unser Team in Mannheim und Weinheim Ihren Wünschen – mit persönlicher Beratung und auf höchstem Niveau."
+    title="Alles für Ihr Haar"
+    lead="Vierzehn Behandlungen, ein Anspruch: persönliche Beratung und Handwerk auf höchstem Niveau – in Mannheim und Weinheim."
     crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Leistungen' }]}
   />
 
-  {categories.map((cat) => (
-    <section class="section section--tight" aria-labelledby={`cat-${cat}`}>
-      <div class="container">
-        <div class="section-head reveal" style="margin-bottom:1.8rem;">
-          <h2 id={`cat-${cat}`} style="font-size:clamp(1.5rem,2.6vw,2rem);">{cat}</h2>
-          <hr class="divider-gold" style="margin:.6rem 0 0;" />
-        </div>
-        <div class="grid grid--3">
-          {services.filter((s) => s.category === cat).map((s) => <ServiceCard service={s} />)}
-        </div>
-      </div>
-    </section>
-  ))}
+  <div class="container">
+    {categories.map((cat) => {
+      const items = services.filter((s) => s.category === cat);
+      const cover = items[0] ? svcImg(items[0].image) : null;
+      return (
+        <section class="cat-block" aria-labelledby={`cat-${cat.replace(/[^a-z]/gi, '-')}`}>
+          <div class="rv">
+            <h2 id={`cat-${cat.replace(/[^a-z]/gi, '-')}`} class="display-lg">{cat}</h2>
+            <p class="lead mt-1">{catLead[cat]}</p>
+            {cover && (
+              <div class="cat-block__media mt-2 rv rv-clip">
+                <Image src={cover} alt={items[0].imageAlt} widths={[480, 720]} sizes="(max-width: 960px) 100vw, 33vw" loading="lazy" />
+              </div>
+            )}
+          </div>
+          <ul class="svc-list">
+            {items.map((s) => (
+              <li class="svc-list__row">
+                <a class="svc-list__link" href={`/leistungen/${s.slug}/`}>
+                  <span class="svc-list__name">{s.name}</span>
+                  <span class="svc-list__tag">{s.tagline}</span>
+                  <Icon name="arrow" size={18} class="svc-list__arrow" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      );
+    })}
+  </div>
 
-  <section class="section section--dark">
-    <div class="container text-center">
-      <p class="eyebrow reveal" style="justify-content:center;">Persönliche Beratung</p>
-      <h2 class="reveal">Nicht sicher, welche Leistung die richtige ist?</h2>
-      <p class="lead reveal" style="margin-inline:auto;">
+  <section class="section section--ink">
+    <div class="container">
+      <h2 class="rv">Nicht sicher, welche Leistung die richtige ist?</h2>
+      <p class="lead rv" style="opacity:.8;">
         Rufen Sie uns an oder vereinbaren Sie einen Beratungstermin – gemeinsam finden wir die
         Behandlung, die zu Ihrem Haar und Ihren Wünschen passt.
       </p>
-      <div class="btn-row mt-3 reveal" style="justify-content:center;">
-        <a class="btn btn--gold" href="/termin/">
+      <div class="btn-row mt-3 rv">
+        <a class="btn btn--accent" href="/termin/">
           <Icon name="calendar" size={16} />
           Termin vereinbaren
         </a>
         <a class="btn btn--ghost-light" href="tel:+4962177735844">
           <Icon name="phone" size={16} />
-          Jetzt anrufen
+          Anrufen
         </a>
       </div>
     </div>
   </section>
-
-  <Partners />
 </Base>

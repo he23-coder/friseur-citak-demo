@@ -8,20 +8,20 @@ import Icon from '@/components/Icon.astro';
   description="Diese Seite existiert leider nicht. Entdecken Sie unsere Leistungen oder vereinbaren Sie einen Termin."
   noindex={true}
 >
-  <section class="page-hero" style="min-height:70vh;display:flex;align-items:center;">
-    <div class="container text-center">
-      <p class="eyebrow" style="justify-content:center;">Fehler 404</p>
-      <h1>Diese Seite wurde nicht gefunden</h1>
-      <p class="lead" style="margin-inline:auto;">
-        Vielleicht wurde die Seite verschoben – entdecken Sie stattdessen unsere Leistungen oder
-        vereinbaren Sie direkt einen Termin.
+  <section class="page-hero" style="min-height:72dvh;display:flex;align-items:center;border-bottom:0;">
+    <div class="container">
+      <p class="eyebrow">Fehler 404</p>
+      <h1 class="display-lg">Diese Seite wurde nicht gefunden</h1>
+      <p class="lead">
+        Vielleicht wurde die Seite verschoben. Entdecken Sie stattdessen unsere Leistungen
+        oder vereinbaren Sie direkt einen Termin.
       </p>
-      <div class="btn-row mt-3" style="justify-content:center;">
-        <a class="btn btn--gold" href="/">
+      <div class="btn-row mt-3">
+        <a class="btn btn--accent" href="/">
           <Icon name="arrow" size={16} />
           Zur Startseite
         </a>
-        <a class="btn btn--ghost-light" href="/leistungen/">Leistungen entdecken</a>
+        <a class="btn btn--ghost" href="/leistungen/">Leistungen entdecken</a>
       </div>
     </div>
   </section>

@@ -8,32 +8,36 @@ interface Props {
   title: string;
   lead?: string;
   image?: ImageMetadata;
+  imageAlt?: string;
   crumbs?: Crumb[];
+  flip?: boolean;
 }
 
-const { eyebrow, title, lead, image, crumbs } = Astro.props;
+const { eyebrow, title, lead, image, imageAlt = '', crumbs, flip = false } = Astro.props;
 ---
 
 <section class="page-hero">
-  {image && (
-    <div class="page-hero__bg">
-      <Image src={image} alt="" widths={[768, 1200, 1920]} sizes="100vw" loading="eager" />
+  <div class:list={['container', { 'page-hero--split': image }]}>
+    <div>
+      {crumbs && crumbs.length > 0 && (
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          {crumbs.map((c, i) => (
+            <>
+              {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+              {i < crumbs.length - 1 && <span aria-hidden="true">/</span>}
+            </>
+          ))}
+        </nav>
+      )}
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h1 class="page-hero__title">{title}</h1>
+      {lead && <p class="lead">{lead}</p>}
+      <slot />
     </div>
-  )}
-  <div class="container">
-    {crumbs && crumbs.length > 0 && (
-      <nav class="breadcrumbs" aria-label="Breadcrumb">
-        {crumbs.map((c, i) => (
-          <>
-            {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
-            {i < crumbs.length - 1 && <span aria-hidden="true">/</span>}
-          </>
-        ))}
-      </nav>
+    {image && (
+      <div class="page-hero__media rv rv-clip" style={flip ? 'order:-1;' : ''}>
+        <Image src={image} alt={imageAlt} widths={[560, 840, 1100]} sizes="(max-width: 900px) 100vw, 40vw" loading="eager" />
+      </div>
     )}
-    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-    <h1>{title}</h1>
-    {lead && <p class="lead">{lead}</p>}
-    <slot />
   </div>
 </section>

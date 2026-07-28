@@ -12,20 +12,20 @@ import hero from '@/assets/salon/empfang.jpg';
   canonicalPath="/termin/"
 >
   <PageHero
-    eyebrow="Termin vereinbaren"
     title="Ihren Wunschtermin online buchen"
     lead="Wählen Sie Ihren Salon und buchen Sie Ihren Termin in wenigen Klicks über unser sicheres Buchungssystem – rund um die Uhr."
     image={hero}
+    imageAlt="Empfang der Hair Lounge by Citak"
     crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Termin vereinbaren' }]}
   />
 
   <section class="section">
     <div class="container grid grid--2">
-      {salons.map((s) => (
-        <article class="contact-card reveal" style="display:flex;flex-direction:column;">
-          <p class="eyebrow">{s.city}</p>
+      {salons.map((s, i) => (
+        <article class="info-panel rv" style={`--d:${i * 0.08}s;display:flex;flex-direction:column;`}>
+          <p class="meta-label">{s.city}</p>
           <h2 style="font-size:1.6rem;">{s.name}</h2>
-          <ul class="contact-list">
+          <ul class="info-list">
             <li><Icon name="pin" size={16} /><span>{s.street}, {s.zip}</span></li>
             {s.hours.map((h) => (
               <li><Icon name="clock" size={16} /><span>{h.days} {h.time}</span></li>
@@ -33,13 +33,13 @@ import hero from '@/assets/salon/empfang.jpg';
             <li><Icon name="star" size={16} /><span>{s.googleRating.score.toLocaleString('de-DE')} · {s.googleRating.count} Google-Rezensionen</span></li>
           </ul>
           <div class="btn-row" style="margin-top:auto;">
-            <a class="btn btn--gold" href={s.bookingUrl} target="_blank" rel="noopener noreferrer">
+            <a class="btn btn--accent" href={s.bookingUrl} target="_blank" rel="noopener noreferrer">
               <Icon name="calendar" size={16} />
               Online buchen
             </a>
             <a class="btn btn--ghost" href={s.phoneHref}>
               <Icon name="phone" size={16} />
-              {s.phoneDisplay}
+              Anrufen
             </a>
           </div>
         </article>
@@ -47,7 +47,7 @@ import hero from '@/assets/salon/empfang.jpg';
     </div>
 
     <div class="container mt-3">
-      <div class="promo reveal">
+      <div class="promo rv">
         <span class="promo__percent">15&nbsp;%</span>
         <div>
           <h2>Neukund:innen, Studierende, Azubis &amp; Schüler:innen sparen</h2>

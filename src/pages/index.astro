@@ -2,8 +2,6 @@
 import { Image } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import Icon from '@/components/Icon.astro';
-import ServiceCard from '@/components/ServiceCard.astro';
-import SalonCard from '@/components/SalonCard.astro';
 import ReviewCarousel from '@/components/ReviewCarousel.astro';
 import CTABand from '@/components/CTABand.astro';
 import Partners from '@/components/Partners.astro';
@@ -11,220 +9,229 @@ import { services } from '@/data/services';
 import { business, salons } from '@/data/site';
 import { team } from '@/data/team';
 
-import hero from '@/assets/salon/hero.jpg';
-import stuehle from '@/assets/salon/stuehle.jpg';
+import hero from '@/assets/salon/stuehle.jpg';
 import waschplatz from '@/assets/salon/waschplatz.jpg';
 import empfang from '@/assets/salon/empfang.jpg';
 import detail from '@/assets/salon/detail.jpg';
 import leuchte from '@/assets/salon/leuchte.jpg';
 import schild from '@/assets/salon/schild.jpg';
-import teamCard from '@/assets/salon/team-card.jpg';
+import weinheimInnen from '@/assets/salon/weinheim-innen.jpg';
+import brautfrisur from '@/assets/services/brautfrisur.jpg';
 import balayage from '@/assets/services/balayage.jpg';
 
-const featured = services.filter((s) => s.featured);
-const teamWithPhotos = team.filter((t) => t.photo);
+const indexServices = [
+  'damenhaarschnitt', 'herrenhaarschnitt', 'balayage', 'babylights',
+  'coloration', 'glossing', 'extensions',
+].map((slug) => services.find((s) => s.slug === slug)!);
+
+const svcImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/services/*', { eager: true });
+const svcImg = (file: string) => Object.entries(svcImages).find(([k]) => k.endsWith(`/${file}`))?.[1].default;
 
 const teamImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/team/*', { eager: true });
 const teamImg = (name: string) => Object.entries(teamImages).find(([k]) => k.endsWith(`/${name}`))?.[1].default;
+const featuredTeam = team.filter((t) => t.photo).slice(0, 4);
 
-const features = [
-  {
-    icon: 'heart',
-    title: 'Familienunternehmen in 2. Generation',
-    text: 'Friseurtradition seit 1975 – gegründet von Sema Citak, heute geführt von Inhaber Cagri Citak.',
-  },
-  {
-    icon: 'sparkle',
-    title: 'Ausgezeichnete Expertise',
-    text: 'Platz 3 bei der Weltmeisterschaft der Friseure, Wella-Fachtrainer und staatlich geprüfter Colorist im Haus.',
-  },
-  {
-    icon: 'star',
-    title: '4,9 von 5 Sternen',
-    text: 'Über 300 Google-Rezensionen für unsere Salons in Mannheim und Weinheim sprechen für sich.',
-  },
-  {
-    icon: 'scissors',
-    title: 'Great-Lengths-Salon',
-    text: 'Ausgezeichnet als einer der besten Great-Lengths-Salons in Deutschland für Extensions & Verdichtung.',
-  },
+const proofs = [
+  { title: 'Familienunternehmen in 2. Generation', text: 'Friseurtradition seit 1975, gegründet von Sema Citak. Heute geführt von Inhaber Cagri Citak.' },
+  { title: 'Ausgezeichnete Expertise', text: 'Platz 3 bei der Weltmeisterschaft der Friseure, Wella-Fachtrainer und staatlich geprüfter Colorist im Haus.' },
+  { title: 'Great-Lengths-Salon', text: 'Ausgezeichnet als einer der besten Great-Lengths-Salons in Deutschland für Extensions und Verdichtung.' },
 ];
 
-const gallery = [
-  { img: stuehle, alt: 'Friseurstühle im Salon von Hair Lounge by Citak', tall: true },
-  { img: waschplatz, alt: 'Waschplätze im Salon', tall: false },
-  { img: empfang, alt: 'Empfangsbereich des Salons', tall: false },
-  { img: detail, alt: 'Detailaufnahme der Salon-Einrichtung', tall: false },
-  { img: leuchte, alt: 'Designleuchte im Salon', tall: false },
-  { img: schild, alt: 'Hair Lounge by Citak & Co. – Salonschild', tall: false },
-  { img: balayage, alt: 'Balayage-Ergebnis von Hair Lounge by Citak', tall: true },
+const galleryItems = [
+  { img: waschplatz, alt: 'Waschplätze im Salon von Hair Lounge by Citak', cls: 'ratio-34 gallery-e__item--r2' },
+  { img: empfang, alt: 'Empfangsbereich des Salons', cls: 'ratio-11' },
+  { img: detail, alt: 'Detail der Salon-Einrichtung', cls: 'ratio-11' },
+  { img: brautfrisur, alt: 'Brautfrisur von Hair Lounge by Citak', cls: 'ratio-1610 gallery-e__item--w2', caption: 'Styling & Brautfrisuren' },
+  { img: leuchte, alt: 'Designleuchte im Salon', cls: 'ratio-11' },
+  { img: schild, alt: 'Hair Lounge by Citak & Co. – Salonschild', cls: 'ratio-11' },
 ];
+
+const totalReviews = salons.reduce((a, s) => a + s.googleRating.count, 0);
 ---
 
 <Base
   title="Friseur in Mannheim & Weinheim | Hair Lounge by Citak"
   description="Hair Lounge by Citak – Ihr Friseur in Mannheim und Weinheim. Typgerechte Schnitte, Balayage, Coloration & Extensions von Great Lengths. 4,9★ auf Google. Jetzt Termin vereinbaren!"
 >
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero__bg">
-      <Image src={hero} alt="Salon der Hair Lounge by Citak – Blick auf die Friseurplätze" widths={[768, 1200, 1600, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
-    </div>
-    <div class="hero__overlay"></div>
-    <div class="hero__content container">
-      <div class="hero__anim">
-        <p class="eyebrow" style="color:var(--gold);">Friseur in Mannheim &amp; Weinheim</p>
-        <h1>Ihr Haar.<br />Unsere <em>Leidenschaft.</em></h1>
-        <p class="hero__sub">
-          Willkommen in der Hair Lounge by Citak – dem Familienunternehmen in zweiter Generation.
-          Unsere Teams in Mannheim und Weinheim lassen Ihre Haarträume wahr werden und schenken
-          Ihnen eine entspannte Auszeit.
-        </p>
-        <div class="btn-row">
-          <a class="btn btn--gold" href="/termin/">
-            <Icon name="calendar" size={16} />
-            Termin vereinbaren
-          </a>
-          <a class="btn btn--ghost-light" href="/leistungen/">Leistungen entdecken</a>
-        </div>
-        <div class="hero__badges">
-          <span class="hero__badge">
-            <Icon name="star" size={16} />
-            <span><strong>4,9</strong> von 5 · 300+ Google-Rezensionen</span>
-          </span>
-          <span class="hero__badge">
-            <Icon name="pin" size={16} />
-            <span><strong>2 Salons</strong> · Mannheim &amp; Weinheim</span>
-          </span>
-          <span class="hero__badge">
-            <Icon name="heart" size={16} />
-            <span>Familienunternehmen <strong>seit 1975</strong></span>
-          </span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Intro / Philosophie -->
-  <section class="section">
-    <div class="container split">
-      <div class="split__media reveal">
-        <Image src={stuehle} alt="Stilvoller Arbeitsplatz in der Hair Lounge by Citak" widths={[560, 840]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
-      </div>
-      <div class="reveal" style="--reveal-delay:.15s;">
-        <p class="eyebrow">Willkommen bei Hair Lounge by Citak</p>
-        <h2>Tradition verpflichtet – Ihr Wunsch steht im Mittelpunkt</h2>
-        <p class="lead">
-          In unsere Räumlichkeiten einzutreten bedeutet, sich wie zu Hause zu fühlen. Authentisch und
-          immer am Puls der Zeit perfektionieren wir Ihren Look – typgerecht und in Vollendung.
-        </p>
-        <ul class="list-check mt-2">
-          <li><Icon name="check" size={16} />Persönliche Beratung vor jeder Behandlung</li>
-          <li><Icon name="check" size={16} />Regelmäßige Weiterbildungen bei Wella</li>
-          <li><Icon name="check" size={16} />Verwöhnhaarwäsche mit Massageliegestuhl</li>
-          <li><Icon name="check" size={16} />Premium-Produkte von Wella, Sebastian &amp; Olaplex</li>
-        </ul>
-        <div class="btn-row mt-2">
-          <a class="btn btn--dark" href="/ueber-uns/">Unsere Geschichte</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Leistungen -->
-  <section class="section section--warm" aria-labelledby="services-heading">
-    <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Unsere Leistungen</p>
-        <h2 id="services-heading">Alles für Ihr Haar – von Schnitt über Farbe bis Extensions</h2>
-        <p class="lead">
-          Mit Liebe und Leidenschaft widmet sich unser Team Ihren Wünschen. Entdecken Sie unsere
-          beliebtesten Leistungen – jede mit persönlicher Beratung.
-        </p>
-      </div>
-      <div class="grid grid--2" style="--reveal-delay:.1s;">
-        {featured.map((s) => <ServiceCard service={s} />)}
-      </div>
-      <div class="btn-row mt-3 reveal">
-        <a class="btn btn--dark" href="/leistungen/">
-          Alle 14 Leistungen entdecken
-          <Icon name="arrow" size={15} />
+  <!-- Hero editorial -->
+  <section class="hero-e" aria-label="Willkommen">
+    <div class="hero-e__text container">
+      <p class="eyebrow hero-e__eyebrow">Friseur in Mannheim &amp; Weinheim</p>
+      <h1 class="hero-e__title">
+        <span class="line"><span>Ihr Haar.</span></span>
+        <span class="line"><span>Unsere</span></span>
+        <span class="line"><span class="accent-italic">Leidenschaft.</span></span>
+      </h1>
+      <p class="hero-e__sub">
+        Familienunternehmen in zweiter Generation. Unsere Teams lassen Ihre
+        Haarträume wahr werden und schenken Ihnen eine entspannte Auszeit.
+      </p>
+      <div class="btn-row hero-e__cta">
+        <a class="btn btn--accent" href="/termin/">
+          <Icon name="calendar" size={16} />
+          Termin vereinbaren
         </a>
+        <a class="btn btn--ghost" href="/leistungen/">Leistungen entdecken</a>
       </div>
+    </div>
+    <div class="hero-e__media">
+      <Image src={hero} alt="Salon der Hair Lounge by Citak – Friseurstühle vor tapetenverkleideter Wand" widths={[768, 1200, 1600, 1920]} sizes="(max-width: 900px) 100vw, 48vw" loading="eager" fetchpriority="high" />
+    </div>
+  </section>
+
+  <!-- Trust bar -->
+  <aside class="trustbar" aria-label="Fakten auf einen Blick">
+    <div class="trustbar__row">
+      <div class="trustbar__item"><strong>4,9</strong><span>von 5 Sternen bei Google</span></div>
+      <div class="trustbar__item"><strong>{totalReviews}+</strong><span>echte Google-Rezensionen</span></div>
+      <div class="trustbar__item"><strong>2</strong><span>Salons: Mannheim &amp; Weinheim</span></div>
+      <div class="trustbar__item"><strong>1975</strong><span>Familienunternehmen seit</span></div>
+    </div>
+  </aside>
+
+  <!-- Leistungen: índice editorial -->
+  <section class="section" aria-labelledby="services-heading">
+    <div class="container svc-index">
+      <div class="svc-index__sticky">
+        <p class="eyebrow">Unsere Leistungen</p>
+        <h2 id="services-heading">Alles für Ihr Haar</h2>
+        <p class="lead mt-1">
+          Mit Liebe und Leidenschaft widmet sich unser Team Ihren Wünschen –
+          von der Präzision des Schnitts über Farbtechniken bis zu Extensions.
+        </p>
+        <div class="svc-index__preview" aria-hidden="true">
+          {indexServices.map((s, i) => {
+            const img = svcImg(s.image);
+            return img ? (
+              <Image
+                src={img}
+                alt=""
+                widths={[400, 640]}
+                sizes="340px"
+                loading={i === 0 ? 'eager' : 'lazy'}
+                data-preview={s.slug}
+                style={i === 0 ? '' : 'display:none;'}
+              />
+            ) : null;
+          })}
+        </div>
+        <div class="btn-row mt-3">
+          <a class="btn btn--ink" href="/leistungen/">
+            Alle 14 Leistungen
+            <Icon name="arrow" size={15} />
+          </a>
+        </div>
+      </div>
+
+      <ul class="svc-list">
+        {indexServices.map((s) => (
+          <li class="svc-list__row">
+            <a class="svc-list__link" href={`/leistungen/${s.slug}/`} data-svc={s.slug}>
+              <span class="svc-list__name">{s.name}</span>
+              <span class="svc-list__tag">{s.tagline}</span>
+              <Icon name="arrow" size={18} class="svc-list__arrow" />
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
   <!-- Rabatt -->
-  <section class="section section--tight">
+  <section class="section--tight">
     <div class="container">
-      <div class="promo reveal">
+      <div class="promo rv">
         <span class="promo__percent">15&nbsp;%</span>
         <div>
           <h2>{business.discount.claim}</h2>
           <p>{business.discount.note}</p>
         </div>
-        <a class="btn btn--gold" href="/termin/">Termin sichern</a>
+        <a class="btn btn--accent" href="/termin/">Termin vereinbaren</a>
       </div>
     </div>
   </section>
 
-  <!-- Warum wir -->
-  <section class="section" aria-labelledby="why-heading">
-    <div class="container">
-      <div class="section-head section-head--center reveal">
-        <p class="eyebrow">Warum Hair Lounge by Citak?</p>
-        <h2 id="why-heading">Vier gute Gründe für Ihren Besuch</h2>
+  <!-- Warum wir: proof editorial -->
+  <section class="section section--raise" aria-labelledby="why-heading">
+    <div class="container proof">
+      <div class="rv">
+        <h2 id="why-heading" class="mb-0">Handwerk, das man an den Ergebnissen misst</h2>
+        <p class="proof__big mt-2" aria-label="4,9 von 5 Sternen">4,9<span class="accent-italic">★</span></p>
+        <p class="lead">
+          Bewertet von über {totalReviews} Kund:innen auf Google – in beiden Salons.
+        </p>
       </div>
-      <div class="features">
-        {features.map((f, i) => (
-          <div class="feature reveal" style={`--reveal-delay:${i * 0.08}s;`}>
-            <span class="feature__icon"><Icon name={f.icon as any} size={22} /></span>
-            <h3>{f.title}</h3>
-            <p>{f.text}</p>
-          </div>
+      <ul class="proof__list">
+        {proofs.map((p, i) => (
+          <li class="rv" style={`--d:${i * 0.08}s`}>
+            <strong>{p.title}</strong>
+            <span>{p.text}</span>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   </section>
 
   <!-- Salons -->
-  <section class="section section--warm" aria-labelledby="salons-heading">
+  <section class="section" aria-labelledby="salons-heading">
     <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Zwei Standorte, ein Anspruch</p>
-        <h2 id="salons-heading">Unsere Salons in Mannheim &amp; Weinheim</h2>
+      <div class="section-head rv">
+        <h2 id="salons-heading" class="display-lg">Zwei Salons.<br /><span class="accent-italic">Ein Anspruch.</span></h2>
       </div>
-      <div class="grid grid--2">
-        {salons.map((s) => <SalonCard salon={s} />)}
-      </div>
+
+      {salons.map((salon, idx) => (
+        <div class={`salon-block ${idx % 2 === 1 ? 'salon-block--flip' : ''} ${idx > 0 ? 'mt-3' : ''}`}>
+          <div class="salon-block__media rv rv-clip">
+            <Image
+              src={salon.id === 'mannheim' ? waschplatz : weinheimInnen}
+              alt={`${salon.name} – Innenansicht der Hair Lounge by Citak`}
+              widths={[640, 960, 1280]}
+              sizes="(max-width: 900px) 100vw, 58vw"
+              loading="lazy"
+            />
+          </div>
+          <div class="salon-block__panel rv" style="--d:.1s">
+            <p class="meta-label">{salon.district ? `${salon.city} · ${salon.district}` : salon.city}</p>
+            <h3 style="font-size:clamp(1.8rem,3.4vw,2.6rem);">{salon.name}</h3>
+            <ul class="salon-block__facts">
+              <li><Icon name="pin" size={16} /><span>{salon.street}, {salon.zip}</span></li>
+              {salon.hours.map((h) => (
+                <li><Icon name="clock" size={16} /><span>{h.days} {h.time}</span></li>
+              ))}
+              <li><Icon name="star" size={16} /><span>{salon.googleRating.score.toLocaleString('de-DE')} von 5 – {salon.googleRating.count} Google-Rezensionen</span></li>
+            </ul>
+            <div class="btn-row">
+              <a class="btn btn--accent btn--sm" href={salon.bookingUrl} target="_blank" rel="noopener noreferrer">Termin vereinbaren</a>
+              <a class="btn btn--ghost btn--sm" href={`/salons/${salon.id}/`}>Salon entdecken</a>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   </section>
 
   <!-- Team -->
-  <section class="section" aria-labelledby="team-heading">
+  <section class="section section--sunk" aria-labelledby="team-heading">
     <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Unser Team</p>
+      <div class="section-head rv">
         <h2 id="team-heading">Jung, kreativ und mit Herz bei der Sache</h2>
         <p class="lead">
-          Was spricht für einen guten Friseur? Für uns zählt vor allem die Sicht unserer Kund:innen.
-          Als junges, kreatives Team holen wir jeden Tag das Beste aus Ihrem Haar heraus.
+          Zwölf Menschen in zwei Salons, eine Leidenschaft: jeden Tag das Beste
+          aus Ihrem Haar herauszuholen.
         </p>
       </div>
-      <div class="grid grid--4">
-        {teamWithPhotos.map((m, i) => (
-          <div class="team-card reveal" style={`--reveal-delay:${i * 0.07}s;`}>
-            <div class="team-card__photo">
-              {teamImg(m.photo!) && (
-                <Image src={teamImg(m.photo!)!} alt={`${m.name} – Team Hair Lounge by Citak`} widths={[300, 480]} sizes="(max-width: 640px) 50vw, 25vw" loading="lazy" />
-              )}
+      <div class="team-grid">
+        {featuredTeam.map((m, i) => (
+          <div class="team-tile rv" style={`--d:${i * 0.07}s`}>
+            <div class="team-tile__frame">
+              <Image src={teamImg(m.photo!)!} alt={`${m.name} – Team Hair Lounge by Citak`} widths={[320, 480]} sizes="(max-width: 720px) 50vw, 25vw" loading="lazy" />
             </div>
-            <p class="team-card__name mb-0">{m.name}</p>
-            <p class="team-card__salon mb-0">Salon {m.salon === 'mannheim' ? 'Mannheim' : 'Weinheim'}</p>
+            <p class="team-tile__name">{m.name}</p>
+            <p class="team-tile__salon">Salon {m.salon === 'mannheim' ? 'Mannheim' : 'Weinheim'}</p>
           </div>
         ))}
       </div>
-      <div class="btn-row mt-3 reveal">
+      <div class="btn-row mt-3 rv">
         <a class="btn btn--ghost" href="/salons/mannheim/#team">Team Mannheim</a>
         <a class="btn btn--ghost" href="/salons/weinheim/#team">Team Weinheim</a>
       </div>
@@ -232,22 +239,20 @@ const gallery = [
   </section>
 
   <!-- Rezensionen -->
-  <div class="section--warm" style="padding:0;">
-    <ReviewCarousel />
-  </div>
+  <ReviewCarousel />
 
   <!-- Galerie -->
-  <section class="section" aria-labelledby="gallery-heading">
+  <section class="section section--raise" aria-labelledby="gallery-heading">
     <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Impressionen</p>
+      <div class="section-head rv">
         <h2 id="gallery-heading">Ein Blick in unsere Salons</h2>
       </div>
-      <div class="gallery reveal">
-        {gallery.map((g) => (
-          <div class={`gallery__item${g.tall ? ' gallery__item--tall' : ''}`}>
-            <Image src={g.img} alt={g.alt} widths={[320, 560]} sizes="(max-width: 800px) 50vw, 25vw" loading="lazy" />
-          </div>
+      <div class="gallery-e rv rv-clip">
+        {galleryItems.map((g) => (
+          <figure class={`gallery-e__item ${g.cls}`} style="margin:0;">
+            <Image src={g.img} alt={g.alt} widths={[420, 720, 1080]} sizes="(max-width: 820px) 50vw, 25vw" loading="lazy" />
+            {g.caption && <figcaption>{g.caption}</figcaption>}
+          </figure>
         ))}
       </div>
     </div>
@@ -257,3 +262,23 @@ const gallery = [
 
   <CTABand />
 </Base>
+
+<script>
+  // Preview-Swap im Leistungs-Index (hover/focus)
+  (function () {
+    var frame = document.querySelector('.svc-index__preview');
+    if (!frame) return;
+    var imgs = Array.from(frame.querySelectorAll('img'));
+    function show(slug: string) {
+      imgs.forEach(function (img) {
+        var on = (img as HTMLElement).dataset.preview === slug;
+        (img as HTMLElement).style.display = on ? '' : 'none';
+      });
+    }
+    document.querySelectorAll<HTMLElement>('.svc-list__link').forEach(function (link) {
+      var slug = link.dataset.svc || '';
+      link.addEventListener('mouseenter', function () { show(slug); });
+      link.addEventListener('focus', function () { show(slug); });
+    });
+  })();
+</script>

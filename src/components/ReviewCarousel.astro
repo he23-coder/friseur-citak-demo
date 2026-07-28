@@ -15,24 +15,22 @@ const items = salon ? reviews.filter((r) => r.salon === salon) : reviews;
 const salonData = salon ? salons.find((s) => s.id === salon)! : null;
 const totalCount = salonData ? salonData.googleRating.count : salons.reduce((a, s) => a + s.googleRating.count, 0);
 const score = 4.9;
-const moreUrl = salonData
-  ? salonData.googleMapsUrl
-  : salons[0].googleMapsUrl;
+const moreUrl = salonData ? salonData.googleMapsUrl : salons[0].googleMapsUrl;
 ---
 
-<section class="section reviews" aria-labelledby="reviews-heading">
+<section class="section section--sunk reviews" aria-labelledby="reviews-heading">
   <div class="container">
-    <div class="section-head reveal">
+    <div class="section-head rv">
       <p class="eyebrow">Google-Rezensionen</p>
       <h2 id="reviews-heading">{heading}</h2>
       {showSummary && (
-        <div class="rating-summary mt-2">
-          <span class="rating-summary__score">{score.toLocaleString('de-DE')}</span>
+        <div class="rating-line mt-2">
+          <span class="rating-line__score">{score.toLocaleString('de-DE')}</span>
           <div>
-            <span class="rating-summary__stars" aria-label={`${score} von 5 Sternen`}>
-              {Array.from({ length: 5 }).map(() => <Icon name="star" size={20} />)}
+            <span class="rating-line__stars" role="img" aria-label={`${score} von 5 Sternen`}>
+              {Array.from({ length: 5 }).map(() => <Icon name="star" size={18} />)}
             </span>
-            <p class="rating-summary__text mb-0">
+            <p class="meta mb-0 mt-1">
               Basierend auf <strong>{totalCount} Google-Rezensionen</strong>
               {salonData ? ` für den ${salonData.name}` : ' für beide Salons'}
             </p>
@@ -41,7 +39,7 @@ const moreUrl = salonData
       )}
     </div>
 
-    <div class="carousel reveal" data-carousel>
+    <div class="carousel rv" data-carousel>
       <div
         class="carousel__viewport"
         tabindex="0"
@@ -52,25 +50,23 @@ const moreUrl = salonData
         <div class="carousel__track">
           {items.map((r, i) => (
             <div class="carousel__slide" role="group" aria-roledescription="Folie" aria-label={`${i + 1} von ${items.length}`}>
-              <article class="review-card">
-                <div class="review-card__top">
-                  <span class="review-card__avatar" aria-hidden="true">{r.author.charAt(0)}</span>
-                  <div>
-                    <p class="review-card__name mb-0">{r.author}</p>
-                    <p class="review-card__meta mb-0">{r.authorMeta} · {r.date}</p>
-                  </div>
-                </div>
-                <div class="review-card__stars">
-                  <span aria-label="5 von 5 Sternen" style="display:inline-flex;gap:2px;">
-                    {Array.from({ length: 5 }).map(() => <Icon name="star" size={15} />)}
+              <article class="rev-card">
+                <span class="rev-card__quote-mark" aria-hidden="true">„</span>
+                <p class="rev-card__text">{r.text}</p>
+                <button class="rev-card__more" type="button" data-more>mehr lesen</button>
+                <div class="rev-card__foot">
+                  <span class="rev-card__stars" role="img" aria-label="5 von 5 Sternen">
+                    {Array.from({ length: 5 }).map(() => <Icon name="star" size={14} />)}
                   </span>
-                  <span class="review-card__salon">Salon {r.salon === 'mannheim' ? 'Mannheim' : 'Weinheim'}</span>
+                  <p class="rev-card__author mb-0">{r.author}</p>
+                  <p class="rev-card__meta mb-0">
+                    {r.date} · Salon {r.salon === 'mannheim' ? 'Mannheim' : 'Weinheim'}
+                  </p>
+                  <span class="rev-card__google">
+                    <Icon name="google" size={13} />
+                    Google Rezension
+                  </span>
                 </div>
-                <p class="review-card__text">„{r.text}"</p>
-                <p class="review-card__google mb-0">
-                  <Icon name="google" size={14} />
-                  Veröffentlicht auf Google
-                </p>
               </article>
             </div>
           ))}
@@ -90,8 +86,8 @@ const moreUrl = salonData
       </div>
     </div>
 
-    <div class="btn-row mt-3 reveal">
-      <a class="btn btn--dark" href={moreUrl} target="_blank" rel="noopener noreferrer">
+    <div class="btn-row mt-3 rv">
+      <a class="btn btn--ink" href={moreUrl} target="_blank" rel="noopener noreferrer">
         <Icon name="google" size={16} />
         Alle Rezensionen auf Google
       </a>
@@ -120,7 +116,7 @@ const moreUrl = salonData
 
     function calcPerView() {
       const w = window.innerWidth;
-      perView = w >= 1100 ? 3 : w >= 760 ? 2 : 1;
+      perView = w >= 1180 ? 3 : w >= 820 ? 2 : 1;
       index = Math.min(index, maxIndex());
       buildDots();
       update(false);
@@ -159,7 +155,7 @@ const moreUrl = salonData
       autoTimer = window.setInterval(() => {
         index = index >= maxIndex() ? 0 : index + 1;
         update();
-      }, 6000);
+      }, 6500);
     }
     function stopAuto() { if (autoTimer) clearInterval(autoTimer); }
     function pauseAuto() { interacted = true; stopAuto(); }
@@ -172,9 +168,10 @@ const moreUrl = salonData
       if (e.key === 'ArrowRight') { e.preventDefault(); go(1); pauseAuto(); }
     });
 
-    // Touch / pointer swipe
     let startX = 0; let dragging = false;
     viewport.addEventListener('pointerdown', (e) => {
+      // Klicks auf Buttons/Links nicht als Swipe abfangen
+      if ((e.target as HTMLElement).closest('button, a')) return;
       dragging = true; startX = e.clientX;
       viewport.classList.add('is-dragging');
       viewport.setPointerCapture(e.pointerId);
@@ -206,4 +203,19 @@ const moreUrl = salonData
   }
 
   document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(initCarousel);
+
+  // „mehr lesen" – Review-Text aufklappen
+  document.querySelectorAll<HTMLButtonElement>('.rev-card__more').forEach((btn) => {
+    const text = btn.parentElement?.querySelector('.rev-card__text');
+    if (!text) return;
+    // Nur anzeigen, wenn der Text tatsächlich gekürzt ist
+    if (text.scrollHeight <= text.clientHeight + 4) {
+      btn.style.display = 'none';
+      return;
+    }
+    btn.addEventListener('click', () => {
+      const open = text.classList.toggle('is-expanded');
+      btn.textContent = open ? 'weniger lesen' : 'mehr lesen';
+    });
+  });
 </script>

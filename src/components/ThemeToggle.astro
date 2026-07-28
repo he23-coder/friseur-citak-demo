@@ -1,0 +1,27 @@
+---
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  labeled?: boolean;
+}
+const { labeled = false } = Astro.props;
+---
+
+<div
+  class:list={['theme-toggle', { 'theme-toggle--labeled': labeled }]}
+  role="group"
+  aria-label="Farbschema wählen"
+>
+  <button type="button" data-theme-choice="light" aria-pressed="false" aria-label="Helles Farbschema">
+    <Icon name="sun" size={16} />
+    {labeled && <span>Hell</span>}
+  </button>
+  <button type="button" data-theme-choice="system" aria-pressed="true" aria-label="System-Farbschema">
+    <Icon name="monitor" size={16} />
+    {labeled && <span>System</span>}
+  </button>
+  <button type="button" data-theme-choice="dark" aria-pressed="false" aria-label="Dunkles Farbschema">
+    <Icon name="moon" size={16} />
+    {labeled && <span>Dunkel</span>}
+  </button>
+</div>

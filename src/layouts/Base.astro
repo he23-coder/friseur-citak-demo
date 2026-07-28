@@ -1,9 +1,8 @@
 ---
-import '@fontsource/fraunces/400.css';
-import '@fontsource/fraunces/500.css';
-import '@fontsource/fraunces/600.css';
-import '@fontsource/fraunces/400-italic.css';
+import '@fontsource-variable/playfair-display/wght.css';
+import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource/manrope/400.css';
+import '@fontsource/manrope/500.css';
 import '@fontsource/manrope/600.css';
 import '@fontsource/manrope/700.css';
 import '@fontsource/manrope/800.css';
@@ -35,6 +34,8 @@ const siteUrl = Astro.site ?? new URL('https://friseur-citak-demo.geraldhe21.wor
 const canonical = new URL(canonicalPath, siteUrl).toString();
 const ogImageUrl = new URL(ogImage, siteUrl).toString();
 
+// Schema: HairSalon ohne selbstreferenzielle Rezensions-Markierung.
+// Die verifizierbare Quelle für Bewertungen ist das jeweilige Google-Profil (sameAs).
 const orgSchema = {
   '@context': 'https://schema.org',
   '@graph': salons.map((s) => ({
@@ -58,11 +59,6 @@ const orgSchema = {
       opens: h.opens,
       closes: h.closes,
     })),
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: s.googleRating.score,
-      reviewCount: s.googleRating.count,
-    },
     sameAs: [business.instagram, business.facebook, s.googleMapsUrl],
   })),
 };
@@ -73,11 +69,30 @@ const orgSchema = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F5F0E6" id="meta-theme-color" />
+    <script is:inline>
+      // Theme vor dem ersten Paint anwenden (kein Flash)
+      (function () {
+        var KEY = 'hlc-theme';
+        var stored = null;
+        try {
+          var param = new URLSearchParams(window.location.search).get('theme');
+          if (param === 'light' || param === 'dark') { stored = param; }
+          else { stored = localStorage.getItem(KEY); }
+        } catch (e) {}
+        var mode = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system';
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = mode === 'system' ? (prefersDark ? 'dark' : 'light') : mode;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themeMode = mode;
+        var meta = document.getElementById('meta-theme-color');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#16120D' : '#F5F0E6');
+      })();
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#16130f" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
 
@@ -105,49 +120,80 @@ const orgSchema = {
     <Footer />
     <StickyBar />
     <script>
-      // Reveal-on-scroll
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const revealEls = document.querySelectorAll('.reveal');
-      if (prefersReduced || !('IntersectionObserver' in window)) {
-        revealEls.forEach((el) => el.classList.add('is-in'));
-      } else {
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((e) => {
-              if (e.isIntersecting) {
-                e.target.classList.add('is-in');
-                io.unobserve(e.target);
-              }
-            });
-          },
-          { threshold: 0.12, rootMargin: '0px 0px -6% 0px' }
-        );
-        revealEls.forEach((el) => io.observe(el));
-      }
+      // Theme-Steuerung (Hell / Dunkel / System)
+      (function () {
+        var KEY = 'hlc-theme';
+        var mq = window.matchMedia('(prefers-color-scheme: dark)');
+        var metaTheme = document.getElementById('meta-theme-color');
+        var COLORS: Record<string, string> = { light: '#F5F0E6', dark: '#16120D' };
 
-      // Header scroll state
-      const header = document.querySelector('.site-header');
-      let lastY = window.scrollY;
-      const onScroll = () => {
-        const y = window.scrollY;
-        header?.classList.toggle('is-scrolled', y > 40);
-        if (y > 500 && y > lastY && !header?.classList.contains('menu-open')) {
-          header?.classList.add('is-hidden');
-        } else {
-          header?.classList.remove('is-hidden');
+        function currentMode() {
+          return document.documentElement.dataset.themeMode || 'system';
         }
-        lastY = y;
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
+        function apply(mode: string, persist: boolean) {
+          var theme = mode === 'system' ? (mq.matches ? 'dark' : 'light') : mode;
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.dataset.themeMode = mode;
+          if (persist) { try { localStorage.setItem(KEY, mode); } catch (e) {} }
+          if (metaTheme) metaTheme.setAttribute('content', COLORS[theme]);
+          document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b.dataset.themeChoice === mode));
+          });
+        }
+        document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]').forEach(function (b) {
+          b.addEventListener('click', function () { apply(b.dataset.themeChoice || 'system', true); });
+        });
+        mq.addEventListener('change', function () {
+          if (currentMode() === 'system') apply('system', false);
+        });
+        apply(currentMode(), false);
+        (window as any).__hlcTheme = { apply };
+      })();
 
-      // Sticky bar visibility
-      const bar = document.querySelector('.sticky-bar');
-      const onScrollBar = () => {
-        bar?.classList.toggle('is-visible', window.scrollY > 320);
-      };
-      window.addEventListener('scroll', onScrollBar, { passive: true });
-      onScrollBar();
+      // Reveal-on-scroll (.rv / .rv-left / .rv-clip)
+      (function () {
+        var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var els = document.querySelectorAll('.rv, .hero-e');
+        if (prefersReduced || !('IntersectionObserver' in window)) {
+          els.forEach(function (el) { el.classList.add('is-in'); });
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-in');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+        els.forEach(function (el) { io.observe(el); });
+      })();
+
+      // Header-Scrollzustand
+      (function () {
+        var header = document.querySelector('.site-header');
+        var lastY = window.scrollY;
+        function onScroll() {
+          var y = window.scrollY;
+          header?.classList.toggle('is-scrolled', y > 40);
+          if (y > 500 && y > lastY && !header?.classList.contains('menu-open')) {
+            header?.classList.add('is-hidden');
+          } else {
+            header?.classList.remove('is-hidden');
+          }
+          lastY = y;
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      })();
+
+      // Sticky-Bar-Sichtbarkeit
+      (function () {
+        var bar = document.querySelector('.sticky-bar');
+        function onScroll() { bar?.classList.toggle('is-visible', window.scrollY > 320); }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      })();
     </script>
   </body>
 </html>

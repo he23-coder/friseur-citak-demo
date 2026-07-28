@@ -1,114 +1,117 @@
-# Hair Lounge by Citak — Website-Redesign (Demo)
+# Hair Lounge by Citak — „Salon Editorial" (v2)
 
-Moderne, konversionsorientierte Neukonzeption der Website **friseur-citak.de** als
-Vertriebs-Demo: Astro 5, TypeScript, statischer Build, Deployment auf Cloudflare Workers.
+Rediseño visual completo de la demo de **friseur-citak.de**: lujo editorial contemporáneo
+con modo oscuro diseñado a medida. Astro 5 + TypeScript, build estático en Cloudflare Workers.
 
 **Live-Demo:** https://friseur-citak-demo.geraldhe21.workers.dev
 
+> v1 (estructura + contenido) → v2 (rediseño visual profundo con 3 skills de diseño).
+> Dirección visual duradera: [`DESIGN.md`](DESIGN.md) · Contexto de producto: [`PRODUCT.md`](PRODUCT.md)
+> Auditorías: [`audits/design-before.md`](audits/design-before.md) · [`audits/design-after.md`](audits/design-after.md)
+
 ---
 
-## Highlights
+## Highlights v2
 
-- **Premium-Design** im Editorial-Stil (Schwarz-Weiß-Fotografie + Gold, Fraunces/Manrope)
-- **14 eigene SEO-Landingpages** für jede Leistung (`/leistungen/…`)
-- **2 Salonseiten** mit Team, kompletter Preisliste, Karten-Fassade und Rezensionen
-- **Google-Rezensionen-Karussell** mit echten, verifizierbaren Rezensionen (Touch, Tastatur, Autoplay-Pause)
-- **Mobile-First** mit Sticky-Aktionsleiste (Anrufen / Termin / Route)
-- **SEO**: HairSalon-Schema, Service-Schema, FAQ-Schema, Breadcrumbs, Sitemap, Canonical, OG-Tags
-- **Performance**: Bilder als responsive WebP via `astro:assets`, lazy loading, kein JS-Framework im Client
-- **Barrierefreiheit**: semantisches HTML, Fokus-States, ARIA, `prefers-reduced-motion`
+- **Nuevo mundo visual „Salon Editorial"**: placa tipográfica que solapa la fotografía real,
+  Playfair Display Variable + Manrope, grano de película, hairlines, un acento dorado.
+- **Modo oscuro completo**: Hell / Dunkel / System, sin flash (inline script pre-paint),
+  persistencia en localStorage, `theme-color` dinámico, selector accesible en header y menú.
+- **Servicios como índice editorial** (sticky + lista + preview al hover) en lugar de
+  rejillas de tarjetas iguales.
+- **Cada ubicación con carácter propio** (serie B/N Mannheim · color cálido Weinheim).
+- **Reseñas reales de Google** en carrusel editorial (serif, „mehr lesen", swipe, teclado,
+  pausa al interactuar). Sin schema de reseñas autopromocionales.
+- **178 tests Playwright** (7 specs) + **Lighthouse 95–100** en las 4 combinaciones.
 
-## Technologie
+## Tecnología
 
 | Bereich | Wahl |
 | --- | --- |
 | Framework | [Astro 5](https://astro.build) (statischer Output) |
 | Sprache | TypeScript |
-| Styling | Eigenes CSS-Design-System (kein Framework) |
-| Fonts | Fraunces + Manrope via `@fontsource` (selbst gehostet, DSGVO-freundlich) |
+| Styling | Design-System propio con CSS-Tokens (Hell/Dunkel) |
+| Fonts | Playfair Display Variable + Manrope (selbst gehostet via `@fontsource`) |
 | Hosting | Cloudflare Workers (Static Assets) via Wrangler |
+| Tests | Playwright Test (7 Spec-Dateien, 178 Tests) |
 
-## Installation & Entwicklung
+## Skills de diseño instaladas y aplicadas
+
+| Skill | Instalada | Ruta | Invocada | Aplicación concreta |
+| --- | :-: | --- | :-: | --- |
+| Impeccable | Sí | `.agents/skills/impeccable/` | Sí (init, document, shape, critique, bolder, typeset, layout, animate, adapt, optimize, audit, polish, harden) | `PRODUCT.md`+`DESIGN.md`, auditoría v1 (27 hallazgos), craft-floor (contraste/medida/movimiento), bug de pointer-capture del carrusel, disciplina tipográfica, hardening de estados |
+| Taste – design-taste-frontend | Sí | `.agents/skills/design-taste-frontend/` | Sí (audit-first + pre-flight mecánico) | Hero ≤ 4 elementos, eyebrows ≤ 1/3, veto de rejillas iguales, shape/color lock, cambio de serif (Fraunces→Playfair), copy audit |
+| Taste – redesign-existing-projects | Sí | `.agents/skills/redesign-existing-projects/` | Sí (scan→diagnose→fix) | Preservación de IA/URLs/funciones, prioridad font→color→estados→layout, 100dvh, estados hover/active/focus |
+| Taste – high-end-visual-design | Sí | `.agents/skills/high-end-visual-design/` | Sí (arquetipos + checklist) | Arquetipo „Editorial Luxury" + „Editorial Split", grano fijo, bezier propio, blur solo en fijos |
+| UI UX Pro Max | Sí | `.agents/skills/ui-ux-pro-max/` | Sí (script oficial de búsqueda) | [`DESIGN-SYSTEM-RESEARCH.md`](DESIGN-SYSTEM-RESEARCH.md): dirección tipográfica confirmada, checklist pre-delivery; rechazados Liquid Glass y paleta azul (documentado) |
+
+Notas de verificación: cada skill contiene su `SKILL.md` legible (no vacío); Impeccable incluye
+además `scripts/`, `reference/` y `agents/`; UI UX Pro Max incluye `scripts/search.py`
+(ejecutado con éxito). Las skills viven dentro de este repositorio en `.agents/skills/`.
+Configuración aplicada: `DESIGN_VARIANCE 7/10`, `MOTION_INTENSITY 5/10`, `VISUAL_DENSITY 4/10`.
+
+## Instalación & desarrollo
 
 ```bash
 npm install
-npm run dev        # Dev-Server auf http://localhost:4321
+npm run dev        # http://localhost:4321
 ```
 
-## Build
+## Build & tests
 
 ```bash
-npm run build      # statischer Build nach dist/
-npm run preview    # lokaler Preview des Builds
+npm run build                # build estático a dist/
+npm run preview              # preview local del build
+npx playwright test          # tests contra producción
+BASE_URL=http://localhost:4321 npx playwright test   # tests contra build local
 ```
+
+Specs: `tests/theme-toggle.spec.ts`, `dark-mode-visual.spec.ts`, `responsive-layout.spec.ts`,
+`navigation.spec.ts`, `carousel.spec.ts`, `forms.spec.ts`, `production-smoke.spec.ts`.
 
 ## Deployment (Cloudflare Workers)
 
 ```bash
-npx wrangler deploy   # baut nicht selbst → vorher npm run build ausführen
+npm run build && npx wrangler deploy
 ```
 
-Die Konfiguration steht in `wrangler.toml` (Static Assets aus `dist/`).
+## Auditorías y pruebas visuales
+
+- `audits/visual-before/` — capturas de la v1 (producción, 28.07.2026)
+- `audits/visual-after/` — capturas de la v2 (ambos temas, desktop + móvil)
+- `audits/lighthouse/` — 4 informes: mobile-light, mobile-dark, desktop-light, desktop-dark
 
 ## Seitenstruktur
 
 ```
-/                        Startseite (Hero, Leistungen, Salons, Team, Rezensionen, Galerie, CTA)
-/leistungen/             Übersicht aller Leistungen nach Kategorie
-/leistungen/damenhaarschnitt/
-/leistungen/herrenhaarschnitt/
-/leistungen/fade-cut/
-/leistungen/balayage/
-/leistungen/babylights/
-/leistungen/folienstraehnen/
-/leistungen/coloration/
-/leistungen/intensivtoenung/
-/leistungen/glossing/
-/leistungen/faceframe/
-/leistungen/repair-cut/
-/leistungen/styling/
-/leistungen/augenpflege/
-/leistungen/extensions/
-/salons/mannheim/        Team, Preisliste, Rezensionen, Anfahrt
-/salons/weinheim/        Team, Preisliste, Rezensionen, Anfahrt
-/ueber-uns/              Geschichte (Sema Citak, Cagri Citak, Timeline)
-/termin/                 Buchungs-Hub (Links zum Original-Buchungssystem)
-/kontakt/                Rückruf-Formular (mailto-basiert), Kontaktdaten, Karten
-/impressum/              Impressum (Originaldaten)
-/datenschutz/            Datenschutzerklärung
-/404/                    Fehlerseite (noindex)
+/                        Startseite (Hero editorial, Trustbar, Leistungs-Index, Proof, Salons, Team, Rezensionen, Galerie, CTA)
+/leistungen/             Índice por categorías (lista editorial + imagen por categoría)
+/leistungen/<slug>/      14 páginas de servicio (2 composiciones alternadas por categoría)
+/salons/mannheim/        Equipo, precios, reseñas, mapa (serie B/N)
+/salons/weinheim/        Equipo, precios, reseñas, mapa (color cálido)
+/ueber-uns/              Historia, timeline Cagri Citak, filosofía
+/termin/                 Hub de reserva (links al sistema original)
+/kontakt/                Formulario validado (mailto), datos, mapas
+/impressum/  /datenschutz/  /404/
 ```
 
 ## Herkunft der Inhalte
 
-Alle Inhalte wurden am 28.07.2026 per Playwright-Analyse aus **öffentlich verifizierbaren
-Quellen** übernommen und redaktionell überarbeitet:
-
-- **Texte, Leistungen, Preise, Team-Namen, Öffnungszeiten, Adressen** → Original-Website
-  friseur-citak.de (Startseite, /dienstleistungen, /extensions, /mannheim, /weinheim,
-  /ueber-uns, /kontakt, /impressum, /datenschutz)
-- **Rezensionen (6 Stück, alle 5★)** → offizielle Google-Maps-Profile der beiden Salons
-  (Mannheim: 4,9★/172 Rezensionen · Weinheim: 4,9★/147 Rezensionen, Stand 28.07.2026).
-  Quelle jeder Rezension ist in `src/data/reviews.ts` hinterlegt.
-- **Bilder** → Original-Website (Salon-Fotos, Team-Porträts, Arbeitsergebnisse,
-  Partner-Logos Wella/Sebastian/Olaplex/Great Lengths)
-- **Buchungslinks** → unverändert auf das Original-Buchungssystem (mitdenkt.io) verlinkt
+Sin cambios respecto a la v1: todos los datos (servicios, precios, equipos, horarios,
+reseñas, historia) provienen de fuentes públicas verificables (web original + perfiles
+oficiales de Google, extraídos el 28.07.2026). Detalle completo en la sección
+„Herkunft der Inhalte" del historial de commits y en `src/data/`.
 
 ## Nicht verifizierbare Daten / offene Platzhalter
 
-- **USt-IdNr.** auf der Original-Datenschutzseite („DE 47112 / 42213") hat ein ungewöhnliches
-  Format → im neuen Impressum bewusst weggelassen, vom Inhaber prüfen lassen.
-- **E-Mail-Formular**: Das Rückruf-Formular arbeitet ohne Backend via `mailto:` (wie das
-  Original-Formular, nur besser validiert). Für produktiven Einsatz kann ein Form-Service
-  (z. B. Cloudflare Workers + Mailchannels) ergänzt werden.
-- **Team-Fotos**: Nur für 5 von 12 Team-Mitgliedern existierten echte Porträts auf der
-  Original-Website (Andy, Gerey, Songül, Melanie, Kay). Übrige Mitglieder erhalten
-  Initialen-Platzhalter – Fotos können nachgeliefert werden.
-- **Instagram-Bilder** werden nicht eingebunden (DSGVO/Performance); die Galerie nutzt
-  Original-Salonfotos.
+- **USt-IdNr.** del sitio original (formato inusual) — omitida; pendiente de confirmación del propietario.
+- **Fotos de equipo**: solo 5 de 12 miembros tienen retrato real; el resto usa loseta
+  tipográfica (sin avatares genéricos ni rostros inventados).
+- **Formulario**: funciona vía `mailto:` (como el original, con validación); preparado
+  para conectar un backend si se desea.
 
 ## Rechtliches
 
 Demo-Projekt zu Vertriebszwecken. Inhalte und Bildmaterial stammen von der öffentlichen
-Website des Unternehmens Hair Lounge by Citak und dienen ausschließlich der Präsentation
-eines Redesigns gegenüber dem Inhaber.
+Website von Hair Lounge by Citak und dienen ausschließlich der Präsentation eines
+Redesigns gegenüber dem Inhaber.

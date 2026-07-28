@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Icon from '@/components/Icon.astro';
+import waschplatz from '@/assets/salon/waschplatz.jpg';
 
 interface Props {
   title?: string;
@@ -14,18 +16,20 @@ const {
 
 <section class="section section--tight">
   <div class="container">
-    <div class="cta-band reveal">
-      <p class="eyebrow" style="justify-content:center;color:var(--gold);">Termin vereinbaren</p>
-      <h2>{title}</h2>
-      <p>{text}</p>
-      <div class="btn-row">
-        <a class="btn btn--gold" href="/termin/">
+    <div class="cta-band rv">
+      <div class="cta-band__bg">
+        <Image src={waschplatz} alt="" widths={[900, 1400]} sizes="100vw" loading="lazy" />
+      </div>
+      <h2 class="display-lg">{title}</h2>
+      <p class="mt-1">{text}</p>
+      <div class="btn-row mt-2">
+        <a class="btn btn--accent" href="/termin/">
           <Icon name="calendar" size={16} />
           Termin vereinbaren
         </a>
         <a class="btn btn--ghost-light" href="tel:+4962177735844">
           <Icon name="phone" size={16} />
-          Jetzt anrufen
+          Anrufen
         </a>
       </div>
     </div>

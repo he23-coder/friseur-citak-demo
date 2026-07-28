@@ -8,12 +8,16 @@ import ReviewCarousel from '@/components/ReviewCarousel.astro';
 import MapFacade from '@/components/MapFacade.astro';
 import CTABand from '@/components/CTABand.astro';
 import type { Salon } from '@/data/site';
-import { salons, business } from '@/data/site';
+import { salons } from '@/data/site';
 import { team } from '@/data/team';
 import type { SalonPrices } from '@/data/prices';
 
 import stuehle from '@/assets/salon/stuehle.jpg';
 import weinheimInnen from '@/assets/salon/weinheim-innen.jpg';
+import empfang from '@/assets/salon/empfang.jpg';
+import detail from '@/assets/salon/detail.jpg';
+import leuchte from '@/assets/salon/leuchte.jpg';
+import heroSalon from '@/assets/salon/hero.jpg';
 
 interface Props {
   salon: Salon;
@@ -23,7 +27,11 @@ interface Props {
 const { salon, prices } = Astro.props;
 const other = salons.find((s) => s.id !== salon.id)!;
 const members = team.filter((t) => t.salon === salon.id);
+
+// Jede Filiale bekommt ihre eigene Bildwelt und Komposition
 const heroImg = salon.id === 'mannheim' ? stuehle : weinheimInnen;
+const secondImg = salon.id === 'mannheim' ? empfang : detail;
+const thirdImg = salon.id === 'mannheim' ? heroSalon : leuchte;
 
 const teamImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/team/*', { eager: true });
 const teamImg = (name: string) => Object.entries(teamImages).find(([k]) => k.endsWith(`/${name}`))?.[1].default;
@@ -47,12 +55,14 @@ const schema = {
   schema={schema}
 >
   <PageHero
-    eyebrow={`Friseur in ${salon.city}`}
-    title={`${salon.name} – Hair Lounge by Citak & Co.`}
+    title={`${salon.name}`}
+    lead="In unsere Räumlichkeiten einzutreten, bedeutet sich wie zu Hause zu fühlen."
     image={heroImg}
+    imageAlt={`${salon.name} – Innenansicht`}
+    flip={salon.id === 'weinheim'}
     crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Salons' }, { label: salon.name }]}
   >
-    <ul class="contact-list mt-2" style="color:var(--on-dark);">
+    <ul class="info-list mt-2" style="max-width:520px;">
       <li><Icon name="pin" size={16} /><span>{salon.street}, {salon.zip}{salon.district ? ` (${salon.district})` : ''}</span></li>
       {salon.hours.map((h) => (
         <li><Icon name="clock" size={16} /><span>{h.days} {h.time}</span></li>
@@ -60,68 +70,67 @@ const schema = {
       <li><Icon name="phone" size={16} /><a href={salon.phoneHref} style="text-decoration:underline;">{salon.phoneDisplay}</a></li>
     </ul>
     <div class="btn-row mt-2">
-      <a class="btn btn--gold" href={salon.bookingUrl} target="_blank" rel="noopener noreferrer">
+      <a class="btn btn--accent" href={salon.bookingUrl} target="_blank" rel="noopener noreferrer">
         <Icon name="calendar" size={16} />
         Termin vereinbaren
       </a>
-      <a class="btn btn--ghost-light" href={salon.googleMapsUrl} target="_blank" rel="noopener noreferrer">
+      <a class="btn btn--ghost" href={salon.googleMapsUrl} target="_blank" rel="noopener noreferrer">
         <Icon name="pin" size={16} />
         Route planen
       </a>
     </div>
   </PageHero>
 
-  <section class="section">
+  <section class="section--tight">
     <div class="container split">
-      <div class="reveal">
-        <p class="eyebrow">Willkommen im {salon.name}</p>
-        <h2>Ankommen und wie zu Hause fühlen</h2>
+      <div class="split__media rv rv-clip" style="aspect-ratio:16/10;overflow:hidden;">
+        <Image src={secondImg} alt={`${salon.name} – Atmosphäre`} widths={[640, 960]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+      </div>
+      <div class="rv" style="--d:.1s;">
+        <h2>Ankommen und durchatmen</h2>
         <p class="lead">
-          In unsere Räumlichkeiten einzutreten, bedeutet sich wie zu Hause zu fühlen. Authentisch,
-          immer am Puls der Zeit und typgerecht perfektionieren wir Ihren Look und bringen ihn in
-          Vollendung.
+          Authentisch, immer am Puls der Zeit und typgerecht: Wir perfektionieren Ihren Look und
+          bringen ihn in Vollendung – mit persönlicher Beratung vor jeder Behandlung.
         </p>
-        <ul class="list-check mt-2">
-          <li><Icon name="check" size={16} />Zentrale Lage: {salon.street}, {salon.zip}</li>
-          <li><Icon name="check" size={16} />Online-Terminbuchung rund um die Uhr</li>
-          <li><Icon name="check" size={16} />{salon.googleRating.score.toLocaleString('de-DE')} von 5 Sternen bei Google ({salon.googleRating.count} Rezensionen)</li>
+        <ul class="list-line mt-2">
+          <li><Icon name="check" size={15} />Zentrale Lage: {salon.street}, {salon.zip}</li>
+          <li><Icon name="check" size={15} />Online-Terminbuchung rund um die Uhr</li>
+          <li><Icon name="check" size={15} />{salon.googleRating.score.toLocaleString('de-DE')} von 5 Sternen bei Google ({salon.googleRating.count} Rezensionen)</li>
         </ul>
         <div class="btn-row mt-2">
-          <a class="btn btn--ghost" href={`/salons/${other.id}/`}>
+          <a class="link-arrow" href={`/salons/${other.id}/`}>
             Auch in {other.city}: Zum {other.name}
             <Icon name="arrow" size={15} />
           </a>
         </div>
       </div>
-      <div class="split__media reveal" style="--reveal-delay:.15s;">
-        <Image src={heroImg} alt={`${salon.name} – Innenansicht`} widths={[560, 840]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
-      </div>
     </div>
   </section>
 
-  <section class="section section--warm" id="team" aria-labelledby="team-heading">
+  <section class="section section--sunk" id="team" aria-labelledby="team-heading">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="section-head rv">
         <p class="eyebrow">Unser Team in {salon.city}</p>
         <h2 id="team-heading">Menschen, die Ihr Handwerk lieben</h2>
         <p class="lead">
-          Als junges, kreatives Team ist es unsere Leidenschaft, jeden Tag das Beste aus Ihnen
-          herauszuholen. Durch regelmäßige Weiterbildungen bei Wella bieten wir Ihnen stets ein
-          modernes Angebot voller kreativer Ideen – und stehen Ihnen zu allen Haarfragen zur Verfügung.
+          Als junges, kreatives Team holen wir jeden Tag das Beste aus Ihnen heraus – mit
+          regelmäßigen Weiterbildungen bei Wella und einem Ohr für alle Haarfragen.
         </p>
       </div>
-      <div class="grid grid--3">
+      <div class="team-grid">
         {members.map((m, i) => (
-          <div class="team-card reveal" style={`--reveal-delay:${i * 0.06}s;`}>
-            <div class="team-card__photo">
+          <div class={`team-tile rv ${m.photo ? '' : 'team-tile--placeholder'}`} style={`--d:${i * 0.06}s`}>
+            <div class="team-tile__frame">
               {m.photo && teamImg(m.photo) ? (
-                <Image src={teamImg(m.photo)!} alt={`${m.name} – Team ${salon.name}`} widths={[300, 480]} sizes="(max-width: 640px) 50vw, 25vw" loading="lazy" />
+                <Image src={teamImg(m.photo)!} alt={`${m.name} – Team ${salon.name}`} widths={[320, 480]} sizes="(max-width: 720px) 50vw, 25vw" loading="lazy" />
               ) : (
-                <span class="team-card__initial" aria-hidden="true">{m.name.charAt(0)}</span>
+                <>
+                  <span class="team-tile__initial" aria-hidden="true">{m.name.charAt(0)}</span>
+                </>
               )}
             </div>
-            <p class="team-card__name mb-0">{m.name}</p>
-            <p class="team-card__salon mb-0">{salon.name}</p>
+            <p class="team-tile__name">{m.name}</p>
+            <p class="team-tile__salon">{salon.name}</p>
           </div>
         ))}
       </div>
@@ -130,42 +139,41 @@ const schema = {
 
   <section class="section" id="preise" aria-labelledby="prices-heading">
     <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Preisliste</p>
+      <div class="section-head rv">
         <h2 id="prices-heading">Transparente Preise im {salon.name}</h2>
       </div>
       <PriceTable prices={prices} />
-      <div class="btn-row mt-2 reveal">
-        <a class="btn btn--gold" href={salon.bookingUrl} target="_blank" rel="noopener noreferrer">
+      <div class="btn-row mt-2 rv">
+        <a class="btn btn--accent" href={salon.bookingUrl} target="_blank" rel="noopener noreferrer">
           <Icon name="calendar" size={16} />
-          Jetzt Termin buchen
+          Termin vereinbaren
         </a>
       </div>
     </div>
   </section>
 
-  <div style="background:var(--paper-warm);">
-    <ReviewCarousel salon={salon.id} heading={`Rezensionen zum Salon ${salon.city}`} />
-  </div>
+  <ReviewCarousel salon={salon.id} heading={`Rezensionen zum Salon ${salon.city}`} />
 
   <section class="section" aria-labelledby="map-heading">
-    <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Anfahrt</p>
+    <div class="container split">
+      <div class="rv">
         <h2 id="map-heading">So finden Sie uns in {salon.city}</h2>
         <p class="lead">{salon.street}, {salon.zip}{salon.district ? ` – ${salon.district}` : ''}</p>
+        <div class="btn-row mt-2">
+          <a class="btn btn--ink" href={salon.googleMapsUrl} target="_blank" rel="noopener noreferrer">
+            <Icon name="pin" size={16} />
+            Route planen
+          </a>
+          <a class="btn btn--ghost" href={salon.phoneHref}>
+            <Icon name="phone" size={16} />
+            Anrufen
+          </a>
+        </div>
+        <div class="split__media mt-3 rv rv-clip" style="aspect-ratio:16/10;overflow:hidden;">
+          <Image src={thirdImg} alt={`${salon.name} – Impression`} widths={[640, 960]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
       </div>
       <MapFacade salon={salon} />
-      <div class="btn-row mt-2 reveal">
-        <a class="btn btn--dark" href={salon.googleMapsUrl} target="_blank" rel="noopener noreferrer">
-          <Icon name="pin" size={16} />
-          Route in Google Maps planen
-        </a>
-        <a class="btn btn--ghost" href={salon.phoneHref}>
-          <Icon name="phone" size={16} />
-          {salon.phoneDisplay}
-        </a>
-      </div>
     </div>
   </section>
 

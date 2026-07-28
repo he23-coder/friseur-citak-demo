@@ -3,7 +3,6 @@ import { Image } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import PageHero from '@/components/PageHero.astro';
 import Icon from '@/components/Icon.astro';
-import ServiceCard from '@/components/ServiceCard.astro';
 import FAQ from '@/components/FAQ.astro';
 import CTABand from '@/components/CTABand.astro';
 import { services, getService } from '@/data/services';
@@ -24,6 +23,10 @@ const nachher = pick('extensions-nachher.jpg');
 
 const related = service.related.map((r) => getService(r)).filter(Boolean);
 
+// Zwei Kompositionen, alterniert nach Kategorie (kein Template-Look)
+const colorCats = ['Farbe & Strähnen', 'Extensions'];
+const composition = colorCats.includes(service.category) ? 'a' : 'b';
+
 const siteUrl = Astro.site ?? new URL('https://friseur-citak-demo.geraldhe21.workers.dev');
 const schema = [
   {
@@ -31,11 +34,7 @@ const schema = [
     '@type': 'Service',
     name: service.name,
     description: service.metaDescription,
-    provider: {
-      '@type': 'HairSalon',
-      name: business.name,
-      url: siteUrl.toString(),
-    },
+    provider: { '@type': 'HairSalon', name: business.name, url: siteUrl.toString() },
     areaServed: [
       { '@type': 'City', name: 'Mannheim' },
       { '@type': 'City', name: 'Weinheim' },
@@ -64,7 +63,9 @@ const schema = [
     eyebrow={service.category}
     title={service.name}
     lead={service.intro}
-    image={img}
+    image={composition === 'a' ? img : undefined}
+    imageAlt={service.imageAlt}
+    flip={composition === 'b' && !!img}
     crumbs={[
       { label: 'Startseite', href: '/' },
       { label: 'Leistungen', href: '/leistungen/' },
@@ -72,21 +73,28 @@ const schema = [
     ]}
   >
     <div class="btn-row mt-2">
-      <a class="btn btn--gold" href="/termin/">
+      <a class="btn btn--accent" href="/termin/">
         <Icon name="calendar" size={16} />
         Termin vereinbaren
       </a>
-      <a class="btn btn--ghost-light" href="tel:+4962177735844">
+      <a class="btn btn--ghost" href="tel:+4962177735844">
         <Icon name="phone" size={16} />
         Beratung anfragen
       </a>
     </div>
   </PageHero>
 
+  {composition === 'b' && img && (
+    <div class="container">
+      <div class="page-hero__media rv rv-clip" style="aspect-ratio:16/9;max-height:560px;">
+        <Image src={img} alt={service.imageAlt} widths={[840, 1280, 1600]} sizes="100vw" loading="eager" />
+      </div>
+    </div>
+  )}
+
   <section class="section">
     <div class="container split">
-      <div class="reveal">
-        <p class="eyebrow">Die Behandlung</p>
+      <div class="rv">
         <h2>Was Sie erwartet</h2>
         {service.description.map((p) => <p class="muted">{p}</p>)}
 
@@ -103,57 +111,51 @@ const schema = [
           </div>
         )}
       </div>
-      <div class="reveal" style="--reveal-delay:.15s;">
-        {img && (
-          <div class="split__media">
-            <Image src={img} alt={service.imageAlt} widths={[560, 840]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
-          </div>
-        )}
+      <div class="rv" style="--d:.12s;">
+        <div class="info-panel">
+          <h3>Ihre Vorteile</h3>
+          <ul class="list-line">
+            {service.benefits.map((b) => (
+              <li><Icon name="check" size={15} />{b}</li>
+            ))}
+          </ul>
+          <p class="meta"><strong style="color:var(--ink);">Für wen geeignet?</strong><br />{service.audience}</p>
+          <hr style="border:0;border-top:1px solid var(--line);margin:1.4rem 0;" />
+          <p class="small muted mb-0">
+            <strong style="color:var(--accent-deep);">15&nbsp;% Rabatt</strong> für Neukund:innen,
+            Studierende, Azubis &amp; Schüler:innen – montags bis mittwochs
+            {service.slug === 'extensions' ? ' (ausgenommen Extensions)' : ''}.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section section--warm">
-    <div class="container split split--reverse">
-      <div class="reveal">
-        <p class="eyebrow">Ihre Vorteile</p>
-        <h2>Darum lohnt sich {service.name}</h2>
-        <ul class="list-check mt-2">
-          {service.benefits.map((b) => (
-            <li><Icon name="check" size={16} />{b}</li>
+  <section class="section--tight section--sunk">
+    <div class="container split">
+      <div class="rv">
+        <h2 style="font-size:clamp(1.5rem,2.6vw,2rem);">Preise &amp; Buchung</h2>
+        <p class="muted">
+          Die aktuellen Preise für {service.name} finden Sie in den Preislisten unserer beiden
+          Salons. Gern beraten wir Sie vorab persönlich.
+        </p>
+      </div>
+      <div class="rv" style="--d:.1s;">
+        <ul class="list-line">
+          {salons.map((s) => (
+            <li>
+              <Icon name="pin" size={15} />
+              <span>
+                <a href={`/salons/${s.id}/#preise`} style="text-decoration:underline;">
+                  Preisliste {s.name}
+                </a>
+                &nbsp;· {s.phoneDisplay}
+              </span>
+            </li>
           ))}
         </ul>
-        <p class="eyebrow mt-3">Für wen geeignet?</p>
-        <p class="muted">{service.audience}</p>
-      </div>
-      <div class="reveal" style="--reveal-delay:.15s;">
-        <div class="contact-card">
-          <h3>Preise &amp; Buchung</h3>
-          <p class="muted small">
-            Die aktuellen Preise für {service.name} finden Sie in den Preislisten unserer beiden
-            Salons. Gern beraten wir Sie vorab persönlich.
-          </p>
-          <ul class="contact-list">
-            {salons.map((s) => (
-              <li>
-                <Icon name="pin" size={16} />
-                <span>
-                  <a href={`/salons/${s.id}/#preise`} style="text-decoration:underline;">
-                    Preisliste {s.name}
-                  </a>
-                </span>
-              </li>
-            ))}
-          </ul>
-          <div class="btn-row">
-            <a class="btn btn--gold btn--sm" href="/termin/">Termin vereinbaren</a>
-          </div>
-          <hr style="border:0;border-top:1px solid var(--line);margin:1.4rem 0;" />
-          <p class="small muted mb-0">
-            <strong style="color:var(--gold-deep);">15&nbsp;% Rabatt</strong> für Neukund:innen,
-            Studierende, Azubis &amp; Schüler:innen – montags bis mittwochs
-            {service.slug === 'extensions' ? ' (ausgenommen Extensions)' : ''}.
-          </p>
+        <div class="btn-row mt-2">
+          <a class="btn btn--accent btn--sm" href="/termin/">Termin vereinbaren</a>
         </div>
       </div>
     </div>
@@ -163,13 +165,20 @@ const schema = [
 
   <section class="section" aria-labelledby="related-heading">
     <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Passt auch zu Ihnen</p>
-        <h2 id="related-heading">Verwandte Leistungen</h2>
+      <div class="section-head rv">
+        <h2 id="related-heading">Passt auch zu Ihnen</h2>
       </div>
-      <div class="grid grid--3">
-        {related.map((r) => <ServiceCard service={r!} />)}
-      </div>
+      <ul class="svc-list rv">
+        {related.map((r) => (
+          <li class="svc-list__row">
+            <a class="svc-list__link" href={`/leistungen/${r!.slug}/`}>
+              <span class="svc-list__name">{r!.name}</span>
+              <span class="svc-list__tag">{r!.tagline}</span>
+              <Icon name="arrow" size={18} class="svc-list__arrow" />
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 

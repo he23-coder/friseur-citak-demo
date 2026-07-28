@@ -1,6 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '@/assets/brand/logo.png';
+import Icon from '@/components/Icon.astro';
+import ThemeToggle from '@/components/ThemeToggle.astro';
 import { services } from '@/data/services';
 import { salons } from '@/data/site';
 
@@ -42,12 +44,16 @@ const featuredServices = services.filter((s) => s.featured);
     </nav>
 
     <div class="header-cta">
-      <a class="btn btn--gold btn--sm" href="/termin/">Termin vereinbaren</a>
+      <ThemeToggle />
+      <a class="btn btn--accent btn--sm" href="/termin/">Termin vereinbaren</a>
     </div>
 
-    <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="header-mobile-actions">
+      <ThemeToggle />
+      <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -64,9 +70,16 @@ const featuredServices = services.filter((s) => s.featured);
     <li class="mobile-menu__item"><a href="/ueber-uns/">Über uns</a></li>
     <li class="mobile-menu__item"><a href="/kontakt/">Kontakt</a></li>
   </ul>
-  <div class="mobile-menu__foot">
-    <a class="btn btn--gold" href="/termin/">Termin vereinbaren</a>
-    <a class="btn btn--ghost-light" href="tel:+4962177735844">Anrufen</a>
+  <div class="mobile-menu__foot mobile-menu__item">
+    <a class="btn btn--accent" href="/termin/">
+      <Icon name="calendar" size={16} />
+      Termin vereinbaren
+    </a>
+    <a class="btn btn--ghost" href="tel:+4962177735844">
+      <Icon name="phone" size={16} />
+      Anrufen
+    </a>
+    <ThemeToggle labeled />
   </div>
 </nav>
 
