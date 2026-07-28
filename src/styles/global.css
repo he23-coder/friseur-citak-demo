@@ -207,7 +207,7 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.45rem); }
 .site-header {
   position: fixed;
   inset: 0 0 auto 0;
-  z-index: 100;
+  z-index: 120;
   transition: background 0.35s var(--ease), box-shadow 0.35s var(--ease), transform 0.35s var(--ease);
 }
 .site-header::after {
