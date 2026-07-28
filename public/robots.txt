@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://friseur-citak-demo.workers.dev/sitemap-index.xml
+Sitemap: https://friseur-citak-demo.geraldhe21.workers.dev/sitemap-index.xml

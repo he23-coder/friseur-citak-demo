@@ -3,7 +3,7 @@
 Moderne, konversionsorientierte Neukonzeption der Website **friseur-citak.de** als
 Vertriebs-Demo: Astro 5, TypeScript, statischer Build, Deployment auf Cloudflare Workers.
 
-**Live-Demo:** https://friseur-citak-demo.workers.dev
+**Live-Demo:** https://friseur-citak-demo.geraldhe21.workers.dev
 
 ---
 

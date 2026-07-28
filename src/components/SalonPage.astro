@@ -28,7 +28,7 @@ const heroImg = salon.id === 'mannheim' ? stuehle : weinheimInnen;
 const teamImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/team/*', { eager: true });
 const teamImg = (name: string) => Object.entries(teamImages).find(([k]) => k.endsWith(`/${name}`))?.[1].default;
 
-const siteUrl = Astro.site ?? new URL('https://friseur-citak-demo.workers.dev');
+const siteUrl = Astro.site ?? new URL('https://friseur-citak-demo.geraldhe21.workers.dev');
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
