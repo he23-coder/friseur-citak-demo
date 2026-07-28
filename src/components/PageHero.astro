@@ -1,0 +1,39 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Crumb { label: string; href?: string }
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  image?: ImageMetadata;
+  crumbs?: Crumb[];
+}
+
+const { eyebrow, title, lead, image, crumbs } = Astro.props;
+---
+
+<section class="page-hero">
+  {image && (
+    <div class="page-hero__bg">
+      <Image src={image} alt="" widths={[768, 1200, 1920]} sizes="100vw" loading="eager" />
+    </div>
+  )}
+  <div class="container">
+    {crumbs && crumbs.length > 0 && (
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        {crumbs.map((c, i) => (
+          <>
+            {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+            {i < crumbs.length - 1 && <span aria-hidden="true">/</span>}
+          </>
+        ))}
+      </nav>
+    )}
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+  </div>
+</section>

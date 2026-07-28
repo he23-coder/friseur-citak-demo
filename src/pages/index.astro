@@ -1,0 +1,259 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import SalonCard from '@/components/SalonCard.astro';
+import ReviewCarousel from '@/components/ReviewCarousel.astro';
+import CTABand from '@/components/CTABand.astro';
+import Partners from '@/components/Partners.astro';
+import { services } from '@/data/services';
+import { business, salons } from '@/data/site';
+import { team } from '@/data/team';
+
+import hero from '@/assets/salon/hero.jpg';
+import stuehle from '@/assets/salon/stuehle.jpg';
+import waschplatz from '@/assets/salon/waschplatz.jpg';
+import empfang from '@/assets/salon/empfang.jpg';
+import detail from '@/assets/salon/detail.jpg';
+import leuchte from '@/assets/salon/leuchte.jpg';
+import schild from '@/assets/salon/schild.jpg';
+import teamCard from '@/assets/salon/team-card.jpg';
+import balayage from '@/assets/services/balayage.jpg';
+
+const featured = services.filter((s) => s.featured);
+const teamWithPhotos = team.filter((t) => t.photo);
+
+const teamImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/team/*', { eager: true });
+const teamImg = (name: string) => Object.entries(teamImages).find(([k]) => k.endsWith(`/${name}`))?.[1].default;
+
+const features = [
+  {
+    icon: 'heart',
+    title: 'Familienunternehmen in 2. Generation',
+    text: 'Friseurtradition seit 1975 – gegründet von Sema Citak, heute geführt von Inhaber Cagri Citak.',
+  },
+  {
+    icon: 'sparkle',
+    title: 'Ausgezeichnete Expertise',
+    text: 'Platz 3 bei der Weltmeisterschaft der Friseure, Wella-Fachtrainer und staatlich geprüfter Colorist im Haus.',
+  },
+  {
+    icon: 'star',
+    title: '4,9 von 5 Sternen',
+    text: 'Über 300 Google-Rezensionen für unsere Salons in Mannheim und Weinheim sprechen für sich.',
+  },
+  {
+    icon: 'scissors',
+    title: 'Great-Lengths-Salon',
+    text: 'Ausgezeichnet als einer der besten Great-Lengths-Salons in Deutschland für Extensions & Verdichtung.',
+  },
+];
+
+const gallery = [
+  { img: stuehle, alt: 'Friseurstühle im Salon von Hair Lounge by Citak', tall: true },
+  { img: waschplatz, alt: 'Waschplätze im Salon', tall: false },
+  { img: empfang, alt: 'Empfangsbereich des Salons', tall: false },
+  { img: detail, alt: 'Detailaufnahme der Salon-Einrichtung', tall: false },
+  { img: leuchte, alt: 'Designleuchte im Salon', tall: false },
+  { img: schild, alt: 'Hair Lounge by Citak & Co. – Salonschild', tall: false },
+  { img: balayage, alt: 'Balayage-Ergebnis von Hair Lounge by Citak', tall: true },
+];
+---
+
+<Base
+  title="Friseur in Mannheim & Weinheim | Hair Lounge by Citak"
+  description="Hair Lounge by Citak – Ihr Friseur in Mannheim und Weinheim. Typgerechte Schnitte, Balayage, Coloration & Extensions von Great Lengths. 4,9★ auf Google. Jetzt Termin vereinbaren!"
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__bg">
+      <Image src={hero} alt="Salon der Hair Lounge by Citak – Blick auf die Friseurplätze" widths={[768, 1200, 1600, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
+    </div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content container">
+      <div class="hero__anim">
+        <p class="eyebrow" style="color:var(--gold);">Friseur in Mannheim &amp; Weinheim</p>
+        <h1>Ihr Haar.<br />Unsere <em>Leidenschaft.</em></h1>
+        <p class="hero__sub">
+          Willkommen in der Hair Lounge by Citak – dem Familienunternehmen in zweiter Generation.
+          Unsere Teams in Mannheim und Weinheim lassen Ihre Haarträume wahr werden und schenken
+          Ihnen eine entspannte Auszeit.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--gold" href="/termin/">
+            <Icon name="calendar" size={16} />
+            Termin vereinbaren
+          </a>
+          <a class="btn btn--ghost-light" href="/leistungen/">Leistungen entdecken</a>
+        </div>
+        <div class="hero__badges">
+          <span class="hero__badge">
+            <Icon name="star" size={16} />
+            <span><strong>4,9</strong> von 5 · 300+ Google-Rezensionen</span>
+          </span>
+          <span class="hero__badge">
+            <Icon name="pin" size={16} />
+            <span><strong>2 Salons</strong> · Mannheim &amp; Weinheim</span>
+          </span>
+          <span class="hero__badge">
+            <Icon name="heart" size={16} />
+            <span>Familienunternehmen <strong>seit 1975</strong></span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Intro / Philosophie -->
+  <section class="section">
+    <div class="container split">
+      <div class="split__media reveal">
+        <Image src={stuehle} alt="Stilvoller Arbeitsplatz in der Hair Lounge by Citak" widths={[560, 840]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
+      </div>
+      <div class="reveal" style="--reveal-delay:.15s;">
+        <p class="eyebrow">Willkommen bei Hair Lounge by Citak</p>
+        <h2>Tradition verpflichtet – Ihr Wunsch steht im Mittelpunkt</h2>
+        <p class="lead">
+          In unsere Räumlichkeiten einzutreten bedeutet, sich wie zu Hause zu fühlen. Authentisch und
+          immer am Puls der Zeit perfektionieren wir Ihren Look – typgerecht und in Vollendung.
+        </p>
+        <ul class="list-check mt-2">
+          <li><Icon name="check" size={16} />Persönliche Beratung vor jeder Behandlung</li>
+          <li><Icon name="check" size={16} />Regelmäßige Weiterbildungen bei Wella</li>
+          <li><Icon name="check" size={16} />Verwöhnhaarwäsche mit Massageliegestuhl</li>
+          <li><Icon name="check" size={16} />Premium-Produkte von Wella, Sebastian &amp; Olaplex</li>
+        </ul>
+        <div class="btn-row mt-2">
+          <a class="btn btn--dark" href="/ueber-uns/">Unsere Geschichte</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leistungen -->
+  <section class="section section--warm" aria-labelledby="services-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Unsere Leistungen</p>
+        <h2 id="services-heading">Alles für Ihr Haar – von Schnitt über Farbe bis Extensions</h2>
+        <p class="lead">
+          Mit Liebe und Leidenschaft widmet sich unser Team Ihren Wünschen. Entdecken Sie unsere
+          beliebtesten Leistungen – jede mit persönlicher Beratung.
+        </p>
+      </div>
+      <div class="grid grid--2" style="--reveal-delay:.1s;">
+        {featured.map((s) => <ServiceCard service={s} />)}
+      </div>
+      <div class="btn-row mt-3 reveal">
+        <a class="btn btn--dark" href="/leistungen/">
+          Alle 14 Leistungen entdecken
+          <Icon name="arrow" size={15} />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rabatt -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="promo reveal">
+        <span class="promo__percent">15&nbsp;%</span>
+        <div>
+          <h2>{business.discount.claim}</h2>
+          <p>{business.discount.note}</p>
+        </div>
+        <a class="btn btn--gold" href="/termin/">Termin sichern</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Warum wir -->
+  <section class="section" aria-labelledby="why-heading">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <p class="eyebrow">Warum Hair Lounge by Citak?</p>
+        <h2 id="why-heading">Vier gute Gründe für Ihren Besuch</h2>
+      </div>
+      <div class="features">
+        {features.map((f, i) => (
+          <div class="feature reveal" style={`--reveal-delay:${i * 0.08}s;`}>
+            <span class="feature__icon"><Icon name={f.icon as any} size={22} /></span>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Salons -->
+  <section class="section section--warm" aria-labelledby="salons-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Zwei Standorte, ein Anspruch</p>
+        <h2 id="salons-heading">Unsere Salons in Mannheim &amp; Weinheim</h2>
+      </div>
+      <div class="grid grid--2">
+        {salons.map((s) => <SalonCard salon={s} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section" aria-labelledby="team-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Unser Team</p>
+        <h2 id="team-heading">Jung, kreativ und mit Herz bei der Sache</h2>
+        <p class="lead">
+          Was spricht für einen guten Friseur? Für uns zählt vor allem die Sicht unserer Kund:innen.
+          Als junges, kreatives Team holen wir jeden Tag das Beste aus Ihrem Haar heraus.
+        </p>
+      </div>
+      <div class="grid grid--4">
+        {teamWithPhotos.map((m, i) => (
+          <div class="team-card reveal" style={`--reveal-delay:${i * 0.07}s;`}>
+            <div class="team-card__photo">
+              {teamImg(m.photo!) && (
+                <Image src={teamImg(m.photo!)!} alt={`${m.name} – Team Hair Lounge by Citak`} widths={[300, 480]} sizes="(max-width: 640px) 50vw, 25vw" loading="lazy" />
+              )}
+            </div>
+            <p class="team-card__name mb-0">{m.name}</p>
+            <p class="team-card__salon mb-0">Salon {m.salon === 'mannheim' ? 'Mannheim' : 'Weinheim'}</p>
+          </div>
+        ))}
+      </div>
+      <div class="btn-row mt-3 reveal">
+        <a class="btn btn--ghost" href="/salons/mannheim/#team">Team Mannheim</a>
+        <a class="btn btn--ghost" href="/salons/weinheim/#team">Team Weinheim</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rezensionen -->
+  <div class="section--warm" style="padding:0;">
+    <ReviewCarousel />
+  </div>
+
+  <!-- Galerie -->
+  <section class="section" aria-labelledby="gallery-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Impressionen</p>
+        <h2 id="gallery-heading">Ein Blick in unsere Salons</h2>
+      </div>
+      <div class="gallery reveal">
+        {gallery.map((g) => (
+          <div class={`gallery__item${g.tall ? ' gallery__item--tall' : ''}`}>
+            <Image src={g.img} alt={g.alt} widths={[320, 560]} sizes="(max-width: 800px) 50vw, 25vw" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Partners />
+
+  <CTABand />
+</Base>

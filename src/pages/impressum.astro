@@ -1,0 +1,54 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import { legal } from '@/data/site';
+---
+
+<Base
+  title="Impressum | Hair Lounge by Citak"
+  description="Impressum der Hair Lounge by Citak – Angaben gemäß § 5 TMG."
+  canonicalPath="/impressum/"
+>
+  <PageHero
+    eyebrow="Rechtliches"
+    title="Impressum"
+    crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Impressum' }]}
+  />
+
+  <section class="section">
+    <div class="container" style="max-width:760px;">
+      <div class="prose">
+        <h2 style="font-size:1.4rem;">Angaben gemäß § 5 TMG</h2>
+        <p>
+          <strong>{legal.impressum.name}</strong><br />
+          {legal.impressum.company}<br />
+          {legal.impressum.street}<br />
+          {legal.impressum.zipCity}<br />
+          {legal.impressum.country}
+        </p>
+
+        <h2 style="font-size:1.4rem;">Kontakt</h2>
+        <p>
+          Tel.: {legal.impressum.phone}<br />
+          E-Mail: <a href={`mailto:${legal.impressum.email}`} style="text-decoration:underline;">{legal.impressum.email}</a>
+        </p>
+
+        <h2 style="font-size:1.4rem;">Verantwortliche Stelle</h2>
+        <p>
+          Verantwortlich für den Inhalt dieser Website:<br />
+          Hairlounge by Citak &amp; Co., Inh. Cagri Citak, Dürrestraße 2, 69469 Weinheim
+        </p>
+
+        <h2 style="font-size:1.4rem;">Streitschlichtung</h2>
+        <p>
+          Plattform der EU-Kommission zur Online-Streitbeilegung:
+          <a href="https://ec.europa.eu/odr" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">https://ec.europa.eu/odr</a>
+        </p>
+        <p>
+          Wir sind zur Teilnahme an einem Streitbeilegungsverfahren vor einer
+          Verbraucherschlichtungsstelle weder verpflichtet noch bereit.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

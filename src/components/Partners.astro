@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import { business } from '@/data/site';
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/brand/*', { eager: true });
+const pick = (name: string) => Object.entries(images).find(([k]) => k.endsWith(`/${name}`))?.[1].default;
+
+const logos = [
+  { img: pick('wella.png'), alt: 'Wella Professionals' },
+  { img: pick('sebastian.png'), alt: 'Sebastian Professional' },
+  { img: pick('olaplex.png'), alt: 'Olaplex' },
+  { img: pick('great-lengths.png'), alt: 'Great Lengths' },
+];
+---
+
+<section class="section section--tight" aria-labelledby="partners-heading">
+  <div class="container">
+    <p class="eyebrow text-center reveal" style="justify-content:center;" id="partners-heading">Unsere Partner &amp; Produkte</p>
+    <div class="partners reveal mt-2">
+      {logos.map((l) => l.img && <Image src={l.img} alt={l.alt} height={44} loading="lazy" />)}
+    </div>
+    <p class="text-center muted small mt-2 reveal">
+      Ausgezeichneter Great-Lengths-Salon · Farb- und Pflegeprodukte von Wella · Olaplex-Behandlungen
+    </p>
+    <slot />
+  </div>
+</section>

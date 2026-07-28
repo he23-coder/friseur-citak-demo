@@ -1,0 +1,58 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import Partners from '@/components/Partners.astro';
+import { services, categories } from '@/data/services';
+import ServiceCard from '@/components/ServiceCard.astro';
+---
+
+<Base
+  title="Leistungen – Schnitt, Farbe, Styling & Extensions | Hair Lounge by Citak"
+  description="Alle Leistungen der Hair Lounge by Citak: Damen- & Herrenhaarschnitt, Balayage, Babylights, Coloration, Glossing, Extensions u.v.m. – in Mannheim & Weinheim."
+  canonicalPath="/leistungen/"
+>
+  <PageHero
+    eyebrow="Leistungen"
+    title="Unsere Leistungen für Ihr Haar"
+    lead="Mit Liebe und Leidenschaft widmet sich unser Team in Mannheim und Weinheim Ihren Wünschen – mit persönlicher Beratung und auf höchstem Niveau."
+    crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Leistungen' }]}
+  />
+
+  {categories.map((cat) => (
+    <section class="section section--tight" aria-labelledby={`cat-${cat}`}>
+      <div class="container">
+        <div class="section-head reveal" style="margin-bottom:1.8rem;">
+          <h2 id={`cat-${cat}`} style="font-size:clamp(1.5rem,2.6vw,2rem);">{cat}</h2>
+          <hr class="divider-gold" style="margin:.6rem 0 0;" />
+        </div>
+        <div class="grid grid--3">
+          {services.filter((s) => s.category === cat).map((s) => <ServiceCard service={s} />)}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section section--dark">
+    <div class="container text-center">
+      <p class="eyebrow reveal" style="justify-content:center;">Persönliche Beratung</p>
+      <h2 class="reveal">Nicht sicher, welche Leistung die richtige ist?</h2>
+      <p class="lead reveal" style="margin-inline:auto;">
+        Rufen Sie uns an oder vereinbaren Sie einen Beratungstermin – gemeinsam finden wir die
+        Behandlung, die zu Ihrem Haar und Ihren Wünschen passt.
+      </p>
+      <div class="btn-row mt-3 reveal" style="justify-content:center;">
+        <a class="btn btn--gold" href="/termin/">
+          <Icon name="calendar" size={16} />
+          Termin vereinbaren
+        </a>
+        <a class="btn btn--ghost-light" href="tel:+4962177735844">
+          <Icon name="phone" size={16} />
+          Jetzt anrufen
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Partners />
+</Base>

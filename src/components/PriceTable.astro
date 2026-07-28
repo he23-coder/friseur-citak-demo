@@ -1,0 +1,43 @@
+---
+import type { SalonPrices } from '@/data/prices';
+import { priceNote } from '@/data/prices';
+
+interface Props {
+  prices: SalonPrices;
+}
+
+const { prices } = Astro.props;
+---
+
+<div>
+  {prices.groups.map((group) => (
+    <section class="price-group reveal">
+      <div class="price-group__title">
+        <h3>{group.title}</h3>
+        {group.twoCols && (
+          <span class="price-cols-head" style="margin-left:auto;text-align:right;">
+            bis Kinn&nbsp;&nbsp;|&nbsp;&nbsp;ab Kinn
+          </span>
+        )}
+      </div>
+      <table class="price-table">
+        <tbody>
+          {group.rows.map((row) => (
+            <tr>
+              <td>{row.label}</td>
+              {group.twoCols ? (
+                <>
+                  <td style="width:110px;">{row.short}</td>
+                  <td style="width:110px;">{row.long}</td>
+                </>
+              ) : (
+                <td>{row.short}</td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  ))}
+  <p class="price-note">{priceNote}</p>
+</div>

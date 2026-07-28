@@ -1,0 +1,180 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import FAQ from '@/components/FAQ.astro';
+import CTABand from '@/components/CTABand.astro';
+import { services, getService } from '@/data/services';
+import { salons, business } from '@/data/site';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug } }));
+}
+
+const { slug } = Astro.params;
+const service = getService(slug)!;
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/services/*', { eager: true });
+const pick = (name: string) => Object.entries(images).find(([k]) => k.endsWith(`/${name}`))?.[1].default;
+const img = pick(service.image);
+const vorher = pick('extensions-vorher.jpg');
+const nachher = pick('extensions-nachher.jpg');
+
+const related = service.related.map((r) => getService(r)).filter(Boolean);
+
+const siteUrl = Astro.site ?? new URL('https://friseur-citak-demo.workers.dev');
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.name,
+    description: service.metaDescription,
+    provider: {
+      '@type': 'HairSalon',
+      name: business.name,
+      url: siteUrl.toString(),
+    },
+    areaServed: [
+      { '@type': 'City', name: 'Mannheim' },
+      { '@type': 'City', name: 'Weinheim' },
+    ],
+    url: new URL(`/leistungen/${service.slug}/`, siteUrl).toString(),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteUrl.toString() },
+      { '@type': 'ListItem', position: 2, name: 'Leistungen', item: new URL('/leistungen/', siteUrl).toString() },
+      { '@type': 'ListItem', position: 3, name: service.name },
+    ],
+  },
+];
+---
+
+<Base
+  title={service.metaTitle}
+  description={service.metaDescription}
+  canonicalPath={`/leistungen/${service.slug}/`}
+  schema={schema}
+>
+  <PageHero
+    eyebrow={service.category}
+    title={service.name}
+    lead={service.intro}
+    image={img}
+    crumbs={[
+      { label: 'Startseite', href: '/' },
+      { label: 'Leistungen', href: '/leistungen/' },
+      { label: service.name },
+    ]}
+  >
+    <div class="btn-row mt-2">
+      <a class="btn btn--gold" href="/termin/">
+        <Icon name="calendar" size={16} />
+        Termin vereinbaren
+      </a>
+      <a class="btn btn--ghost-light" href="tel:+4962177735844">
+        <Icon name="phone" size={16} />
+        Beratung anfragen
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container split">
+      <div class="reveal">
+        <p class="eyebrow">Die Behandlung</p>
+        <h2>Was Sie erwartet</h2>
+        {service.description.map((p) => <p class="muted">{p}</p>)}
+
+        {service.slug === 'extensions' && vorher && nachher && (
+          <div class="img-duo mt-3">
+            <figure>
+              <Image src={vorher} alt="Vor der Haarverlängerung mit Great Lengths" widths={[400, 560]} sizes="(max-width: 640px) 50vw, 25vw" loading="lazy" />
+              <figcaption>Vorher</figcaption>
+            </figure>
+            <figure>
+              <Image src={nachher} alt="Nach der Haarverlängerung: 75 Extensions in 40 cm" widths={[400, 560]} sizes="(max-width: 640px) 50vw, 25vw" loading="lazy" />
+              <figcaption>Nachher · 75 Extensions, 40 cm</figcaption>
+            </figure>
+          </div>
+        )}
+      </div>
+      <div class="reveal" style="--reveal-delay:.15s;">
+        {img && (
+          <div class="split__media">
+            <Image src={img} alt={service.imageAlt} widths={[560, 840]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--warm">
+    <div class="container split split--reverse">
+      <div class="reveal">
+        <p class="eyebrow">Ihre Vorteile</p>
+        <h2>Darum lohnt sich {service.name}</h2>
+        <ul class="list-check mt-2">
+          {service.benefits.map((b) => (
+            <li><Icon name="check" size={16} />{b}</li>
+          ))}
+        </ul>
+        <p class="eyebrow mt-3">Für wen geeignet?</p>
+        <p class="muted">{service.audience}</p>
+      </div>
+      <div class="reveal" style="--reveal-delay:.15s;">
+        <div class="contact-card">
+          <h3>Preise &amp; Buchung</h3>
+          <p class="muted small">
+            Die aktuellen Preise für {service.name} finden Sie in den Preislisten unserer beiden
+            Salons. Gern beraten wir Sie vorab persönlich.
+          </p>
+          <ul class="contact-list">
+            {salons.map((s) => (
+              <li>
+                <Icon name="pin" size={16} />
+                <span>
+                  <a href={`/salons/${s.id}/#preise`} style="text-decoration:underline;">
+                    Preisliste {s.name}
+                  </a>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div class="btn-row">
+            <a class="btn btn--gold btn--sm" href="/termin/">Termin vereinbaren</a>
+          </div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:1.4rem 0;" />
+          <p class="small muted mb-0">
+            <strong style="color:var(--gold-deep);">15&nbsp;% Rabatt</strong> für Neukund:innen,
+            Studierende, Azubis &amp; Schüler:innen – montags bis mittwochs
+            {service.slug === 'extensions' ? ' (ausgenommen Extensions)' : ''}.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FAQ items={service.faq} heading={`Häufige Fragen zu ${service.name}`} />
+
+  <section class="section" aria-labelledby="related-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Passt auch zu Ihnen</p>
+        <h2 id="related-heading">Verwandte Leistungen</h2>
+      </div>
+      <div class="grid grid--3">
+        {related.map((r) => <ServiceCard service={r!} />)}
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title={`${service.name} in Mannheim oder Weinheim erleben`}
+    text="Sichern Sie sich Ihren Wunschtermin – online in wenigen Klicks oder ganz persönlich am Telefon. Wir freuen uns auf Sie!"
+  />
+</Base>

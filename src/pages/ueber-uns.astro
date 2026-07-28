@@ -1,0 +1,140 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import Partners from '@/components/Partners.astro';
+import CTABand from '@/components/CTABand.astro';
+import hero from '@/assets/salon/schild.jpg';
+import waschplatz from '@/assets/salon/waschplatz.jpg';
+import leuchte from '@/assets/salon/leuchte.jpg';
+
+const timeline = [
+  { year: '2004', text: 'Ausbildung auf der Privatschule Amann & Bohn' },
+  { year: '2006', text: 'Gesellenprüfung' },
+  { year: '2006', text: 'Meisterprüfung mit Auszeichnung' },
+  { year: '2007', text: 'Selbstständigkeit und paralleles Training für die Weltmeisterschaft der Friseure' },
+  { year: '2007', text: 'Vizemeister bei der Deutschen Meisterschaft' },
+  { year: '2008', text: 'Platz 3 bei der Weltmeisterschaft der Friseure in Chicago' },
+  { year: '2009', text: 'Wella-Fachtrainer in Düsseldorf und staatlich geprüfter Colorist' },
+  { year: '2013', text: 'Betriebswirt bei der Handwerkskammer in Frankfurt' },
+  { year: 'seit 2014', text: 'Geschäftsführer von 3 Salons und freiberuflicher Trainer der Firma Wella' },
+];
+
+const schwerpunkte = [
+  'Typgerechte, individuelle und stilgerechte Fachberatung',
+  'Farbtechniken wie Ombré, Balayage, Painting Highlights, Granny Hair und sämtliche Blondnuancen – auch im Pastellbereich',
+  'Präzise Damenhaarschnitte: Bob, Kurzhaarschnitt und mehr',
+  'Der klassische Façon für Herren – akkurat umgesetzt von unseren Experten',
+];
+---
+
+<Base
+  title="Über uns – Familienunternehmen seit 1975 | Hair Lounge by Citak"
+  description="Hair Lounge by Citak: Familienunternehmen in 2. Generation. Gegründet von Sema Citak, geführt von Cagri Citak – Vizeweltmeister-Niveau, Wella-Fachtrainer, Salons in Mannheim & Weinheim."
+  canonicalPath="/ueber-uns/"
+>
+  <PageHero
+    eyebrow="Über uns"
+    title="Tradition und Geschichte – seit 1975"
+    lead="Ein Familienunternehmen in zweiter Generation: Aus einer Ausbildung beim Mannheimer Friseur Diehm wurde eine Friseurgeschichte mit bis zu zehn Salons."
+    image={hero}
+    crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Über uns' }]}
+  />
+
+  <!-- Geschichte -->
+  <section class="section">
+    <div class="container split">
+      <div class="split__media reveal">
+        <Image src={waschplatz} alt="Waschplätze in der Hair Lounge by Citak" widths={[560, 840]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
+      </div>
+      <div class="reveal" style="--reveal-delay:.15s;">
+        <p class="eyebrow">Die Anfänge</p>
+        <h2>Von Sema Citak gegründet</h2>
+        <p class="muted">
+          Sema Citak, die Gründerin des Familienunternehmens, begann ihre Ausbildung 1975 in
+          Mannheim – beim damals sehr bekannten Friseur Diehm. Für sie stand fest: alles mit viel
+          Engagement und Hingabe erlernen, um in diesem kreativen Beruf erfolgreich zu sein.
+        </p>
+        <p class="muted">
+          Nach bestandener Gesellen- und Meisterprüfung verwirklichte sie ihren Traum von der
+          Selbstständigkeit und eröffnete einen Salon in Mannheim. Gemeinsam mit ihrem Ehemann
+          Kemal Citak – ebenfalls Friseurmeister – folgten weitere Salons an der Bergstraße und in
+          der näheren Umgebung.
+        </p>
+        <p class="muted">
+          Im Laufe der Jahre entstanden so zehn Salons durch die Familie Citak. Einige davon wurden
+          an Mitarbeitende veräußert – um auch ihnen den Traum der Selbstständigkeit zu ermöglichen.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cagri Citak -->
+  <section class="section section--dark">
+    <div class="container split split--reverse">
+      <div class="reveal">
+        <p class="eyebrow">Inhaber: Cagri Citak</p>
+        <h2>„Haare sind meine größte Passion"</h2>
+        <p style="color:var(--on-dark-muted);font-style:italic;font-family:var(--font-display);font-size:1.15rem;line-height:1.6;">
+          „Die Veränderung bei Menschen durch eine typgerechte Haarfarbe, im Einklang mit dem
+          Schnitt und einem perfekten Styling, ist immer wieder faszinierend für mich. Mein
+          Bestreben ist es, Menschen noch glücklicher zu machen. Meine Kunden sind keine
+          gewöhnlichen Kunden – sie sind meine Freunde!"
+        </p>
+        <p class="mt-2" style="color:var(--gold);font-weight:700;">— Cagri Citak, Inhaber</p>
+      </div>
+      <div class="split__media reveal" style="--reveal-delay:.15s;">
+        <Image src={leuchte} alt="Atmosphäre in der Hair Lounge by Citak" widths={[560, 840]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
+      </div>
+    </div>
+
+    <div class="container mt-3">
+      <p class="eyebrow reveal">Der Weg von Cagri Citak</p>
+      <div class="grid grid--3 mt-2">
+        {timeline.map((t, i) => (
+          <div class="feature reveal" style={`--reveal-delay:${(i % 3) * 0.08}s;background:transparent;border-color:rgba(245,241,232,.18);`}>
+            <p class="eyebrow mb-0" style="color:var(--gold);">{t.year}</p>
+            <p class="mt-1 mb-0" style="color:var(--on-dark);font-size:.95rem;">{t.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Schwerpunkte & Philosophie -->
+  <section class="section">
+    <div class="container split">
+      <div class="reveal">
+        <p class="eyebrow">Unsere Schwerpunkte</p>
+        <h2>Handwerk auf höchstem Niveau</h2>
+        <ul class="list-check mt-2">
+          {schwerpunkte.map((s) => (
+            <li><Icon name="check" size={16} />{s}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="reveal" style="--reveal-delay:.15s;">
+        <p class="eyebrow">Salonphilosophie</p>
+        <h2>Tradition verpflichtet</h2>
+        <p class="muted">
+          Bereits seit zwei Generationen bildet die Familie Citak ein exklusives
+          Friseurunternehmen. Nicht wir, sondern unsere Kund:innen mit ihren Wünschen und
+          Bedürfnissen stehen im Mittelpunkt der Hair Lounge by Citak – wir gehen auf Ihre
+          individuelle Persönlichkeit ein.
+        </p>
+        <p class="muted">
+          Dass diese Philosophie auch tatsächlich gelebt wird, spiegelt sich am besten im Feedback
+          unserer Kund:innen und unseres Teams wider.
+        </p>
+        <div class="btn-row mt-2">
+          <a class="btn btn--dark" href="/salons/mannheim/#team">Team Mannheim</a>
+          <a class="btn btn--ghost" href="/salons/weinheim/#team">Team Weinheim</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Partners />
+  <CTABand title="Lernen Sie uns persönlich kennen" />
+</Base>

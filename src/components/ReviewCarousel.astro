@@ -1,0 +1,209 @@
+---
+import Icon from '@/components/Icon.astro';
+import { reviews } from '@/data/reviews';
+import { salons } from '@/data/site';
+
+interface Props {
+  salon?: 'mannheim' | 'weinheim';
+  heading?: string;
+  showSummary?: boolean;
+}
+
+const { salon, heading = 'Das sagen unsere Kund:innen', showSummary = true } = Astro.props;
+
+const items = salon ? reviews.filter((r) => r.salon === salon) : reviews;
+const salonData = salon ? salons.find((s) => s.id === salon)! : null;
+const totalCount = salonData ? salonData.googleRating.count : salons.reduce((a, s) => a + s.googleRating.count, 0);
+const score = 4.9;
+const moreUrl = salonData
+  ? salonData.googleMapsUrl
+  : salons[0].googleMapsUrl;
+---
+
+<section class="section reviews" aria-labelledby="reviews-heading">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Google-Rezensionen</p>
+      <h2 id="reviews-heading">{heading}</h2>
+      {showSummary && (
+        <div class="rating-summary mt-2">
+          <span class="rating-summary__score">{score.toLocaleString('de-DE')}</span>
+          <div>
+            <span class="rating-summary__stars" aria-label={`${score} von 5 Sternen`}>
+              {Array.from({ length: 5 }).map(() => <Icon name="star" size={20} />)}
+            </span>
+            <p class="rating-summary__text mb-0">
+              Basierend auf <strong>{totalCount} Google-Rezensionen</strong>
+              {salonData ? ` für den ${salonData.name}` : ' für beide Salons'}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+
+    <div class="carousel reveal" data-carousel>
+      <div
+        class="carousel__viewport"
+        tabindex="0"
+        role="region"
+        aria-roledescription="Karussell"
+        aria-label="Kundenrezensionen"
+      >
+        <div class="carousel__track">
+          {items.map((r, i) => (
+            <div class="carousel__slide" role="group" aria-roledescription="Folie" aria-label={`${i + 1} von ${items.length}`}>
+              <article class="review-card">
+                <div class="review-card__top">
+                  <span class="review-card__avatar" aria-hidden="true">{r.author.charAt(0)}</span>
+                  <div>
+                    <p class="review-card__name mb-0">{r.author}</p>
+                    <p class="review-card__meta mb-0">{r.authorMeta} · {r.date}</p>
+                  </div>
+                </div>
+                <div class="review-card__stars">
+                  <span aria-label="5 von 5 Sternen" style="display:inline-flex;gap:2px;">
+                    {Array.from({ length: 5 }).map(() => <Icon name="star" size={15} />)}
+                  </span>
+                  <span class="review-card__salon">Salon {r.salon === 'mannheim' ? 'Mannheim' : 'Weinheim'}</span>
+                </div>
+                <p class="review-card__text">„{r.text}"</p>
+                <p class="review-card__google mb-0">
+                  <Icon name="google" size={14} />
+                  Veröffentlicht auf Google
+                </p>
+              </article>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="carousel__nav">
+        <div class="carousel__arrows">
+          <button class="carousel__btn" data-prev aria-label="Vorherige Rezensionen">
+            <Icon name="chevron-left" size={20} />
+          </button>
+          <button class="carousel__btn" data-next aria-label="Nächste Rezensionen">
+            <Icon name="chevron-right" size={20} />
+          </button>
+        </div>
+        <div class="carousel__dots" role="tablist" aria-label="Rezension auswählen"></div>
+      </div>
+    </div>
+
+    <div class="btn-row mt-3 reveal">
+      <a class="btn btn--dark" href={moreUrl} target="_blank" rel="noopener noreferrer">
+        <Icon name="google" size={16} />
+        Alle Rezensionen auf Google
+      </a>
+      <a class="btn btn--ghost" href="/termin/">Termin vereinbaren</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initCarousel(root: HTMLElement) {
+    const viewport = root.querySelector<HTMLElement>('.carousel__viewport')!;
+    const track = root.querySelector<HTMLElement>('.carousel__track')!;
+    const slides = Array.from(track.children) as HTMLElement[];
+    const prevBtn = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const nextBtn = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const dotsWrap = root.querySelector<HTMLElement>('.carousel__dots')!;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let index = 0;
+    let perView = 1;
+    let autoTimer: number | undefined;
+    let interacted = false;
+
+    const pages = () => Math.max(1, Math.ceil(slides.length / perView));
+    const maxIndex = () => slides.length - perView;
+
+    function calcPerView() {
+      const w = window.innerWidth;
+      perView = w >= 1100 ? 3 : w >= 760 ? 2 : 1;
+      index = Math.min(index, maxIndex());
+      buildDots();
+      update(false);
+    }
+
+    function update(animate = true) {
+      const slideW = slides[0].getBoundingClientRect().width;
+      track.style.transition = animate && !reduced ? '' : 'none';
+      track.style.transform = `translateX(${-index * slideW}px)`;
+      dotsWrap.querySelectorAll('button').forEach((d, i) => {
+        d.classList.toggle('is-active', i === Math.round(index / perView));
+        d.setAttribute('aria-selected', String(i === Math.round(index / perView)));
+      });
+    }
+
+    function go(delta: number) {
+      index = Math.max(0, Math.min(maxIndex(), index + delta));
+      update();
+    }
+
+    function buildDots() {
+      dotsWrap.innerHTML = '';
+      for (let i = 0; i < pages(); i++) {
+        const b = document.createElement('button');
+        b.className = 'carousel__dot';
+        b.setAttribute('role', 'tab');
+        b.setAttribute('aria-label', `Seite ${i + 1}`);
+        b.addEventListener('click', () => { index = i * perView; update(); pauseAuto(); });
+        dotsWrap.appendChild(b);
+      }
+    }
+
+    function startAuto() {
+      if (reduced || interacted) return;
+      stopAuto();
+      autoTimer = window.setInterval(() => {
+        index = index >= maxIndex() ? 0 : index + 1;
+        update();
+      }, 6000);
+    }
+    function stopAuto() { if (autoTimer) clearInterval(autoTimer); }
+    function pauseAuto() { interacted = true; stopAuto(); }
+
+    prevBtn.addEventListener('click', () => { go(-1); pauseAuto(); });
+    nextBtn.addEventListener('click', () => { go(1); pauseAuto(); });
+
+    viewport.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); pauseAuto(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); pauseAuto(); }
+    });
+
+    // Touch / pointer swipe
+    let startX = 0; let dragging = false;
+    viewport.addEventListener('pointerdown', (e) => {
+      dragging = true; startX = e.clientX;
+      viewport.classList.add('is-dragging');
+      viewport.setPointerCapture(e.pointerId);
+    });
+    viewport.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      const slideW = slides[0].getBoundingClientRect().width;
+      track.style.transition = 'none';
+      track.style.transform = `translateX(${-index * slideW + dx}px)`;
+    });
+    const endDrag = (e: PointerEvent) => {
+      if (!dragging) return;
+      dragging = false;
+      viewport.classList.remove('is-dragging');
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 48) go(dx < 0 ? 1 : -1); else update();
+      pauseAuto();
+    };
+    viewport.addEventListener('pointerup', endDrag);
+    viewport.addEventListener('pointercancel', endDrag);
+    viewport.addEventListener('mouseenter', stopAuto);
+    viewport.addEventListener('mouseleave', startAuto);
+    viewport.addEventListener('focusin', stopAuto);
+
+    window.addEventListener('resize', calcPerView);
+    calcPerView();
+    startAuto();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(initCarousel);
+</script>

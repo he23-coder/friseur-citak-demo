@@ -1,0 +1,184 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import MapFacade from '@/components/MapFacade.astro';
+import { salons, business } from '@/data/site';
+---
+
+<Base
+  title="Kontakt – Hair Lounge by Citak in Mannheim & Weinheim"
+  description="Kontakt zur Hair Lounge by Citak: Salons in Mannheim (Friedrichsring 4) und Weinheim (Hauptstraße 81). Telefon, Rückruf-Formular, Anfahrt und Öffnungszeiten."
+  canonicalPath="/kontakt/"
+>
+  <PageHero
+    eyebrow="Kontakt"
+    title="Haben Sie Fragen? Schreiben Sie uns!"
+    lead="Nutzen Sie unsere Kanäle: Rückruf-Formular, Telefon oder direkt online buchen – wir melden uns schnellstmöglich bei Ihnen."
+    crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Kontakt' }]}
+  />
+
+  <section class="section">
+    <div class="container contact-grid">
+      <!-- Formular -->
+      <div class="reveal">
+        <p class="eyebrow">Rückruf anfordern</p>
+        <h2>Wir rufen Sie zurück</h2>
+        <p class="muted">
+          Hinterlassen Sie Ihre Daten und Ihren Wunschzeitraum – das Formular öffnet Ihr E-Mail-Programm
+          mit einer vorbereiteten Nachricht an uns.
+        </p>
+
+        <div class="form__success" id="form-success" role="status">
+          <strong>Ihr E-Mail-Programm wurde geöffnet.</strong>
+          <p class="mb-0 small muted">
+            Senden Sie die vorbereitete Nachricht einfach ab – wir melden uns zeitnah bei Ihnen.
+            Alternativ erreichen Sie uns unter <a href={`mailto:${business.email}`} style="text-decoration:underline;">{business.email}</a>.
+          </p>
+        </div>
+
+        <form class="form mt-2" id="contact-form" novalidate>
+          <div class="form__row form__row--2">
+            <div class="form__field">
+              <label for="f-name">Vor- und Nachname *</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required />
+              <span class="form__error">Bitte geben Sie Ihren Namen an.</span>
+            </div>
+            <div class="form__field">
+              <label for="f-phone">Telefonnummer *</label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel" required />
+              <span class="form__error">Bitte geben Sie Ihre Telefonnummer an.</span>
+            </div>
+          </div>
+          <div class="form__row form__row--2">
+            <div class="form__field">
+              <label for="f-email">E-Mail *</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required />
+              <span class="form__error">Bitte geben Sie eine gültige E-Mail-Adresse an.</span>
+            </div>
+            <div class="form__field">
+              <label for="f-salon">Bevorzugter Salon</label>
+              <select id="f-salon" name="salon">
+                <option value="Egal">Egal</option>
+                <option value="Mannheim">Salon Mannheim</option>
+                <option value="Weinheim">Salon Weinheim</option>
+              </select>
+            </div>
+          </div>
+          <div class="form__field">
+            <label for="f-when">Wann wünschen Sie einen Rückruf? *</label>
+            <input id="f-when" name="when" type="text" placeholder="z. B. werktags ab 17 Uhr" required />
+            <span class="form__error">Bitte nennen Sie uns einen Zeitraum.</span>
+          </div>
+          <div class="form__field">
+            <label for="f-msg">Ihre Nachricht (optional)</label>
+            <textarea id="f-msg" name="message" rows="4"></textarea>
+          </div>
+          <p class="form__note">
+            Mit dem Absenden öffnet sich Ihr E-Mail-Programm. Ihre Daten werden ausschließlich zur
+            Bearbeitung Ihrer Anfrage verwendet. Details in der
+            <a href="/datenschutz/" style="text-decoration:underline;">Datenschutzerklärung</a>.
+          </p>
+          <div>
+            <button class="btn btn--gold" type="submit">
+              <Icon name="mail" size={16} />
+              Nachricht vorbereiten
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Kontaktdaten -->
+      <div class="reveal" style="--reveal-delay:.15s;display:grid;gap:1.4rem;align-content:start;">
+        {salons.map((s) => (
+          <div class="contact-card">
+            <p class="eyebrow">{s.city}</p>
+            <h3>{s.name}</h3>
+            <ul class="contact-list">
+              <li><Icon name="pin" size={16} /><span>{s.street}, {s.zip}</span></li>
+              {s.hours.map((h) => (
+                <li><Icon name="clock" size={16} /><span>{h.days} {h.time}</span></li>
+              ))}
+              <li><Icon name="phone" size={16} /><a href={s.phoneHref}>{s.phoneDisplay}</a></li>
+            </ul>
+            <div class="btn-row">
+              <a class="btn btn--dark btn--sm" href={s.bookingUrl} target="_blank" rel="noopener noreferrer">Termin buchen</a>
+              <a class="btn btn--ghost btn--sm" href={`/salons/${s.id}/`}>Zum Salon</a>
+            </div>
+          </div>
+        ))}
+        <div class="contact-card">
+          <h3>Direktkontakt</h3>
+          <ul class="contact-list">
+            <li><Icon name="mail" size={16} /><a href={`mailto:${business.email}`}>{business.email}</a></li>
+            <li><Icon name="whatsapp" size={16} /><a href={business.whatsapp}>{business.whatsappDisplay}</a></li>
+            <li><Icon name="instagram" size={16} /><a href={business.instagram} target="_blank" rel="noopener noreferrer">@hairlounge_by_citak</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--warm" aria-labelledby="maps-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Anfahrt</p>
+        <h2 id="maps-heading">So finden Sie uns</h2>
+      </div>
+      <div class="grid grid--2">
+        {salons.map((s) => <MapFacade salon={s} />)}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const success = document.getElementById('form-success');
+
+    function setValidity(input: HTMLInputElement, valid: boolean) {
+      input.closest('.form__field')?.classList.toggle('is-invalid', !valid);
+      return valid;
+    }
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = form.querySelector<HTMLInputElement>('#f-name')!;
+      const phone = form.querySelector<HTMLInputElement>('#f-phone')!;
+      const email = form.querySelector<HTMLInputElement>('#f-email')!;
+      const when = form.querySelector<HTMLInputElement>('#f-when')!;
+      const salon = form.querySelector<HTMLSelectElement>('#f-salon')!;
+      const msg = form.querySelector<HTMLTextAreaElement>('#f-msg')!;
+
+      let ok = true;
+      ok = setValidity(name, name.value.trim().length >= 2) && ok;
+      ok = setValidity(phone, phone.value.trim().length >= 5) && ok;
+      ok = setValidity(email, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) && ok;
+      ok = setValidity(when, when.value.trim().length >= 3) && ok;
+      if (!ok) {
+        form.querySelector('.is-invalid input')?.focus();
+        return;
+      }
+
+      const body = [
+        `Name: ${name.value.trim()}`,
+        `Telefon: ${phone.value.trim()}`,
+        `E-Mail: ${email.value.trim()}`,
+        `Bevorzugter Salon: ${salon.value}`,
+        `Rückruf-Zeitraum: ${when.value.trim()}`,
+        msg.value.trim() ? `\nNachricht:\n${msg.value.trim()}` : '',
+      ].join('\n');
+
+      const mailto = `mailto:info@friseur-citak.de?subject=${encodeURIComponent(
+        `Rückrufbitte über die Website – ${name.value.trim()}`
+      )}&body=${encodeURIComponent(body)}`;
+
+      window.location.href = mailto;
+      success?.classList.add('is-visible');
+      success?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    form?.querySelectorAll('input, textarea').forEach((el) =>
+      el.addEventListener('input', () => el.closest('.form__field')?.classList.remove('is-invalid'))
+    );
+  </script>
+</Base>

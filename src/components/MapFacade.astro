@@ -1,0 +1,39 @@
+---
+import type { Salon } from '@/data/site';
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  salon: Salon;
+}
+
+const { salon } = Astro.props;
+const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(`Hair Lounge by Citak, ${salon.street}, ${salon.zip}`)}&output=embed`;
+---
+
+<div class="map-facade reveal" data-map={embedUrl}>
+  <button class="map-facade__placeholder" type="button" aria-label={`Karte laden: ${salon.name}`}>
+    <span style="display:grid;place-items:center;gap:.4rem;">
+      <Icon name="pin" size={30} />
+      <strong>{salon.name}</strong>
+      <span>{salon.street}, {salon.zip}</span>
+      <span class="btn btn--dark btn--sm" style="margin-top:.6rem;">
+        <Icon name="map" size={14} /> Karte laden
+      </span>
+    </span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.map-facade').forEach((wrap) => {
+    const btn = wrap.querySelector('button');
+    btn?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = wrap.dataset.map!;
+      iframe.loading = 'lazy';
+      iframe.title = 'Karte – Google Maps';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      wrap.appendChild(iframe);
+      btn.remove();
+    });
+  });
+</script>

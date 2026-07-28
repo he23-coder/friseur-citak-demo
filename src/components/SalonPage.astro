@@ -1,0 +1,176 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import PriceTable from '@/components/PriceTable.astro';
+import ReviewCarousel from '@/components/ReviewCarousel.astro';
+import MapFacade from '@/components/MapFacade.astro';
+import CTABand from '@/components/CTABand.astro';
+import type { Salon } from '@/data/site';
+import { salons, business } from '@/data/site';
+import { team } from '@/data/team';
+import type { SalonPrices } from '@/data/prices';
+
+import stuehle from '@/assets/salon/stuehle.jpg';
+import weinheimInnen from '@/assets/salon/weinheim-innen.jpg';
+
+interface Props {
+  salon: Salon;
+  prices: SalonPrices;
+}
+
+const { salon, prices } = Astro.props;
+const other = salons.find((s) => s.id !== salon.id)!;
+const members = team.filter((t) => t.salon === salon.id);
+const heroImg = salon.id === 'mannheim' ? stuehle : weinheimInnen;
+
+const teamImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/team/*', { eager: true });
+const teamImg = (name: string) => Object.entries(teamImages).find(([k]) => k.endsWith(`/${name}`))?.[1].default;
+
+const siteUrl = Astro.site ?? new URL('https://friseur-citak-demo.workers.dev');
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteUrl.toString() },
+    { '@type': 'ListItem', position: 2, name: 'Salons' },
+    { '@type': 'ListItem', position: 3, name: salon.name },
+  ],
+};
+---
+
+<Base
+  title={`Friseur ${salon.city} – ${salon.street} | Hair Lounge by Citak`}
+  description={`Ihr Friseur in ${salon.city}: ${salon.name} der Hair Lounge by Citak, ${salon.street}, ${salon.zip}. ${salon.hours.map((h) => `${h.days} ${h.time}`).join(', ')}. Jetzt Termin vereinbaren!`}
+  canonicalPath={`/salons/${salon.id}/`}
+  schema={schema}
+>
+  <PageHero
+    eyebrow={`Friseur in ${salon.city}`}
+    title={`${salon.name} – Hair Lounge by Citak & Co.`}
+    image={heroImg}
+    crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Salons' }, { label: salon.name }]}
+  >
+    <ul class="contact-list mt-2" style="color:var(--on-dark);">
+      <li><Icon name="pin" size={16} /><span>{salon.street}, {salon.zip}{salon.district ? ` (${salon.district})` : ''}</span></li>
+      {salon.hours.map((h) => (
+        <li><Icon name="clock" size={16} /><span>{h.days} {h.time}</span></li>
+      ))}
+      <li><Icon name="phone" size={16} /><a href={salon.phoneHref} style="text-decoration:underline;">{salon.phoneDisplay}</a></li>
+    </ul>
+    <div class="btn-row mt-2">
+      <a class="btn btn--gold" href={salon.bookingUrl} target="_blank" rel="noopener noreferrer">
+        <Icon name="calendar" size={16} />
+        Termin vereinbaren
+      </a>
+      <a class="btn btn--ghost-light" href={salon.googleMapsUrl} target="_blank" rel="noopener noreferrer">
+        <Icon name="pin" size={16} />
+        Route planen
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container split">
+      <div class="reveal">
+        <p class="eyebrow">Willkommen im {salon.name}</p>
+        <h2>Ankommen und wie zu Hause fühlen</h2>
+        <p class="lead">
+          In unsere Räumlichkeiten einzutreten, bedeutet sich wie zu Hause zu fühlen. Authentisch,
+          immer am Puls der Zeit und typgerecht perfektionieren wir Ihren Look und bringen ihn in
+          Vollendung.
+        </p>
+        <ul class="list-check mt-2">
+          <li><Icon name="check" size={16} />Zentrale Lage: {salon.street}, {salon.zip}</li>
+          <li><Icon name="check" size={16} />Online-Terminbuchung rund um die Uhr</li>
+          <li><Icon name="check" size={16} />{salon.googleRating.score.toLocaleString('de-DE')} von 5 Sternen bei Google ({salon.googleRating.count} Rezensionen)</li>
+        </ul>
+        <div class="btn-row mt-2">
+          <a class="btn btn--ghost" href={`/salons/${other.id}/`}>
+            Auch in {other.city}: Zum {other.name}
+            <Icon name="arrow" size={15} />
+          </a>
+        </div>
+      </div>
+      <div class="split__media reveal" style="--reveal-delay:.15s;">
+        <Image src={heroImg} alt={`${salon.name} – Innenansicht`} widths={[560, 840]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--warm" id="team" aria-labelledby="team-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Unser Team in {salon.city}</p>
+        <h2 id="team-heading">Menschen, die Ihr Handwerk lieben</h2>
+        <p class="lead">
+          Als junges, kreatives Team ist es unsere Leidenschaft, jeden Tag das Beste aus Ihnen
+          herauszuholen. Durch regelmäßige Weiterbildungen bei Wella bieten wir Ihnen stets ein
+          modernes Angebot voller kreativer Ideen – und stehen Ihnen zu allen Haarfragen zur Verfügung.
+        </p>
+      </div>
+      <div class="grid grid--3">
+        {members.map((m, i) => (
+          <div class="team-card reveal" style={`--reveal-delay:${i * 0.06}s;`}>
+            <div class="team-card__photo">
+              {m.photo && teamImg(m.photo) ? (
+                <Image src={teamImg(m.photo)!} alt={`${m.name} – Team ${salon.name}`} widths={[300, 480]} sizes="(max-width: 640px) 50vw, 25vw" loading="lazy" />
+              ) : (
+                <span class="team-card__initial" aria-hidden="true">{m.name.charAt(0)}</span>
+              )}
+            </div>
+            <p class="team-card__name mb-0">{m.name}</p>
+            <p class="team-card__salon mb-0">{salon.name}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="preise" aria-labelledby="prices-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Preisliste</p>
+        <h2 id="prices-heading">Transparente Preise im {salon.name}</h2>
+      </div>
+      <PriceTable prices={prices} />
+      <div class="btn-row mt-2 reveal">
+        <a class="btn btn--gold" href={salon.bookingUrl} target="_blank" rel="noopener noreferrer">
+          <Icon name="calendar" size={16} />
+          Jetzt Termin buchen
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div style="background:var(--paper-warm);">
+    <ReviewCarousel salon={salon.id} heading={`Rezensionen zum Salon ${salon.city}`} />
+  </div>
+
+  <section class="section" aria-labelledby="map-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Anfahrt</p>
+        <h2 id="map-heading">So finden Sie uns in {salon.city}</h2>
+        <p class="lead">{salon.street}, {salon.zip}{salon.district ? ` – ${salon.district}` : ''}</p>
+      </div>
+      <MapFacade salon={salon} />
+      <div class="btn-row mt-2 reveal">
+        <a class="btn btn--dark" href={salon.googleMapsUrl} target="_blank" rel="noopener noreferrer">
+          <Icon name="pin" size={16} />
+          Route in Google Maps planen
+        </a>
+        <a class="btn btn--ghost" href={salon.phoneHref}>
+          <Icon name="phone" size={16} />
+          {salon.phoneDisplay}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title={`Ihr Termin im Salon ${salon.city}`}
+    text={`Buchen Sie Ihren Termin im ${salon.name} bequem online – oder rufen Sie uns an: ${salon.phoneDisplay}. Wir freuen uns auf Sie!`}
+  />
+</Base>

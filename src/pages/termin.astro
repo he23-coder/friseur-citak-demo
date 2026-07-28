@@ -1,0 +1,59 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import { salons } from '@/data/site';
+import hero from '@/assets/salon/empfang.jpg';
+---
+
+<Base
+  title="Termin vereinbaren – online buchen | Hair Lounge by Citak"
+  description="Vereinbaren Sie Ihren Friseurtermin in Mannheim oder Weinheim bequem online – oder rufen Sie uns direkt an. Wir freuen uns auf Sie!"
+  canonicalPath="/termin/"
+>
+  <PageHero
+    eyebrow="Termin vereinbaren"
+    title="Ihren Wunschtermin online buchen"
+    lead="Wählen Sie Ihren Salon und buchen Sie Ihren Termin in wenigen Klicks über unser sicheres Buchungssystem – rund um die Uhr."
+    image={hero}
+    crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Termin vereinbaren' }]}
+  />
+
+  <section class="section">
+    <div class="container grid grid--2">
+      {salons.map((s) => (
+        <article class="contact-card reveal" style="display:flex;flex-direction:column;">
+          <p class="eyebrow">{s.city}</p>
+          <h2 style="font-size:1.6rem;">{s.name}</h2>
+          <ul class="contact-list">
+            <li><Icon name="pin" size={16} /><span>{s.street}, {s.zip}</span></li>
+            {s.hours.map((h) => (
+              <li><Icon name="clock" size={16} /><span>{h.days} {h.time}</span></li>
+            ))}
+            <li><Icon name="star" size={16} /><span>{s.googleRating.score.toLocaleString('de-DE')} · {s.googleRating.count} Google-Rezensionen</span></li>
+          </ul>
+          <div class="btn-row" style="margin-top:auto;">
+            <a class="btn btn--gold" href={s.bookingUrl} target="_blank" rel="noopener noreferrer">
+              <Icon name="calendar" size={16} />
+              Online buchen
+            </a>
+            <a class="btn btn--ghost" href={s.phoneHref}>
+              <Icon name="phone" size={16} />
+              {s.phoneDisplay}
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="container mt-3">
+      <div class="promo reveal">
+        <span class="promo__percent">15&nbsp;%</span>
+        <div>
+          <h2>Neukund:innen, Studierende, Azubis &amp; Schüler:innen sparen</h2>
+          <p>15 % Rabatt auf sämtliche Dienstleistungen – montags bis mittwochs in beiden Salons, ausgenommen Extensions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

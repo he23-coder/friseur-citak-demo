@@ -1,0 +1,42 @@
+---
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  items: { q: string; a: string }[];
+  heading?: string;
+  eyebrow?: string;
+}
+
+const { items, heading = 'Häufige Fragen', eyebrow = 'FAQ' } = Astro.props;
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<section class="section section--warm" aria-labelledby="faq-heading">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 id="faq-heading">{heading}</h2>
+    </div>
+    <div class="faq reveal">
+      {items.map((f) => (
+        <details>
+          <summary>
+            {f.q}
+            <span class="faq__icon"><Icon name="plus" size={14} /></span>
+          </summary>
+          <p class="faq__answer">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+</section>

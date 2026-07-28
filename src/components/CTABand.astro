@@ -1,0 +1,33 @@
+---
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  title?: string;
+  text?: string;
+}
+
+const {
+  title = 'Bereit für Ihren neuen Look?',
+  text = 'Vereinbaren Sie Ihren Termin ganz einfach online – oder rufen Sie uns direkt in Mannheim oder Weinheim an. Wir freuen uns auf Sie!',
+} = Astro.props;
+---
+
+<section class="section section--tight">
+  <div class="container">
+    <div class="cta-band reveal">
+      <p class="eyebrow" style="justify-content:center;color:var(--gold);">Termin vereinbaren</p>
+      <h2>{title}</h2>
+      <p>{text}</p>
+      <div class="btn-row">
+        <a class="btn btn--gold" href="/termin/">
+          <Icon name="calendar" size={16} />
+          Termin vereinbaren
+        </a>
+        <a class="btn btn--ghost-light" href="tel:+4962177735844">
+          <Icon name="phone" size={16} />
+          Jetzt anrufen
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

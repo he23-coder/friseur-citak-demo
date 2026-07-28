@@ -1,0 +1,9 @@
+---
+import SalonPage from '@/components/SalonPage.astro';
+import { salons } from '@/data/site';
+import { pricesMannheim } from '@/data/prices';
+
+const salon = salons.find((s) => s.id === 'mannheim')!;
+---
+
+<SalonPage salon={salon} prices={pricesMannheim} />

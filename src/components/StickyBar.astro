@@ -1,0 +1,22 @@
+---
+import Icon from '@/components/Icon.astro';
+import { salons } from '@/data/site';
+
+// Sticky Mobile-Aktionsleiste: Anrufen / Termin / Route (Salon-Auswahl auf /termin/)
+const mannheim = salons[0];
+---
+
+<div class="sticky-bar" aria-label="Schnellzugriff">
+  <a href={mannheim.phoneHref} aria-label={`Anrufen: ${mannheim.phoneDisplay}`}>
+    <Icon name="phone" size={19} />
+    Anrufen
+  </a>
+  <a href="/termin/" class="sticky-bar__primary">
+    <Icon name="calendar" size={19} />
+    Termin
+  </a>
+  <a href={mannheim.googleMapsUrl} target="_blank" rel="noopener noreferrer" aria-label="Route zum Salon planen">
+    <Icon name="pin" size={19} />
+    Route
+  </a>
+</div>
