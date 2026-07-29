@@ -1,6 +1,6 @@
 ---
 import Icon from '@/components/Icon.astro';
-import { reviews } from '@/data/reviews';
+import { reviews, reviewVerificationDate } from '@/data/reviews';
 import { salons } from '@/data/site';
 
 interface Props {
@@ -33,6 +33,9 @@ const moreUrl = salonData ? salonData.googleMapsUrl : salons[0].googleMapsUrl;
             <p class="meta mb-0 mt-1">
               Basierend auf <strong>{totalCount} Google-Rezensionen</strong>
               {salonData ? ` für den ${salonData.name}` : ' für beide Salons'}
+            </p>
+            <p class="review-verified mb-0">
+              Bewertungen und Gesamtzahl zuletzt geprüft am {reviewVerificationDate}.
             </p>
           </div>
         </div>

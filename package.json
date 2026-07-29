@@ -5,9 +5,13 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
+    "dev:worker": "npm run build && wrangler dev --local --port 8787",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "test:local": "TEST_ENV=local BASE_URL=http://127.0.0.1:4321 playwright test",
+    "test:production": "TEST_ENV=production BASE_URL=https://friseur-citak-demo.geraldhe21.workers.dev playwright test",
+    "test:visual": "CAPTURE_VISUALS=1 playwright test tests/visual-final.spec.ts"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.6.0",

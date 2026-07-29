@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '@/assets/brand/logo.png';
-import Icon from '@/components/Icon.astro';
 import ThemeToggle from '@/components/ThemeToggle.astro';
 import { services } from '@/data/services';
 import { salons } from '@/data/site';
@@ -11,95 +10,69 @@ const isActive = (href: string) =>
   href === '/' ? path === '/' : path.startsWith(href);
 
 const featuredServices = services.filter((s) => s.featured);
+const mobileLinks = [
+  { href: '/', label: 'Startseite' },
+  { href: '/leistungen/', label: 'Leistungen' },
+  { href: '/salons/', label: 'Salons' },
+  { href: '/ueber-uns/', label: 'Über uns' },
+  { href: '/kontakt/', label: 'Kontakt' },
+];
 ---
 
 <header class="site-header" id="site-header">
-  <div class="container header-inner">
-    <a href="/" class="brand" aria-label="Hair Lounge by Citak – Startseite">
-      <Image src={logo} alt="Hair Lounge by Citak & Co. – Logo" width={157} height={109} loading="eager" />
-    </a>
+  <div class="header-shell">
+    <div class="container header-inner">
+      <a href="/" class="brand" aria-label="Hair Lounge by Citak – Startseite">
+        <Image src={logo} alt="Hair Lounge by Citak & Co. – Logo" width={157} height={109} loading="eager" />
+      </a>
 
-    <nav class="main-nav" aria-label="Hauptnavigation">
-      <ul>
-        <li class="nav-item--has-sub">
-          <a href="/leistungen/" class="nav-link" aria-current={isActive('/leistungen/') ? 'page' : undefined}>Leistungen</a>
-          <ul class="nav-sub">
-            {featuredServices.map((s) => (
-              <li><a href={`/leistungen/${s.slug}/`}>{s.name}</a></li>
-            ))}
-            <li><a href="/leistungen/"><strong>Alle Leistungen →</strong></a></li>
-          </ul>
-        </li>
-        <li class="nav-item--has-sub">
-          <a href="/salons/mannheim/" class="nav-link" aria-current={isActive('/salons/') ? 'page' : undefined}>Salons</a>
-          <ul class="nav-sub">
-            {salons.map((s) => (
-              <li><a href={`/salons/${s.id}/`}>{s.name}</a></li>
-            ))}
-          </ul>
-        </li>
-        <li><a href="/ueber-uns/" class="nav-link" aria-current={isActive('/ueber-uns/') ? 'page' : undefined}>Über uns</a></li>
-        <li><a href="/kontakt/" class="nav-link" aria-current={isActive('/kontakt/') ? 'page' : undefined}>Kontakt</a></li>
-      </ul>
+      <nav class="main-nav" aria-label="Hauptnavigation">
+        <ul>
+          <li><a href="/" class="nav-link" aria-current={isActive('/') ? 'page' : undefined}>Startseite</a></li>
+          <li class="nav-item--has-sub">
+            <a href="/leistungen/" class="nav-link" aria-current={isActive('/leistungen/') ? 'page' : undefined}>Leistungen</a>
+            <ul class="nav-sub">
+              {featuredServices.map((s) => (
+                <li><a href={`/leistungen/${s.slug}/`}>{s.name}</a></li>
+              ))}
+              <li><a href="/leistungen/"><strong>Alle Leistungen →</strong></a></li>
+            </ul>
+          </li>
+          <li class="nav-item--has-sub">
+            <a href="/salons/" class="nav-link" aria-current={isActive('/salons/') ? 'page' : undefined}>Salons</a>
+            <ul class="nav-sub">
+              {salons.map((s) => (
+                <li><a href={`/salons/${s.id}/`}>{s.name}</a></li>
+              ))}
+            </ul>
+          </li>
+          <li><a href="/ueber-uns/" class="nav-link" aria-current={isActive('/ueber-uns/') ? 'page' : undefined}>Über uns</a></li>
+          <li><a href="/kontakt/" class="nav-link" aria-current={isActive('/kontakt/') ? 'page' : undefined}>Kontakt</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-cta">
+        <ThemeToggle />
+        <a class="btn btn--accent btn--sm" href="/termin/">Termin vereinbaren</a>
+      </div>
+
+      <div class="header-mobile-actions">
+        <ThemeToggle />
+        <a class="btn btn--accent btn--mobile" href="/termin/">Termin</a>
+      </div>
+    </div>
+
+    <nav class="mobile-primary-nav" aria-label="Mobile Hauptnavigation">
+      <div class="container mobile-primary-nav__track">
+        {mobileLinks.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
     </nav>
-
-    <div class="header-cta">
-      <ThemeToggle />
-      <a class="btn btn--accent btn--sm" href="/termin/">Termin vereinbaren</a>
-    </div>
-
-    <div class="header-mobile-actions">
-      <ThemeToggle />
-      <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
   </div>
 </header>
-
-<nav class="mobile-menu" id="mobile-menu" aria-label="Mobile Navigation">
-  <ul>
-    <li class="mobile-menu__item"><a href="/">Startseite</a></li>
-    <li class="mobile-menu__item"><a href="/leistungen/">Leistungen</a></li>
-    <li class="mobile-menu__item mobile-sub"><a href="/leistungen/damenhaarschnitt/">Damenhaarschnitt</a></li>
-    <li class="mobile-menu__item mobile-sub"><a href="/leistungen/herrenhaarschnitt/">Herrenhaarschnitt</a></li>
-    <li class="mobile-menu__item mobile-sub"><a href="/leistungen/balayage/">Balayage</a></li>
-    <li class="mobile-menu__item mobile-sub"><a href="/leistungen/extensions/">Extensions</a></li>
-    <li class="mobile-menu__item"><a href="/salons/mannheim/">Salon Mannheim</a></li>
-    <li class="mobile-menu__item"><a href="/salons/weinheim/">Salon Weinheim</a></li>
-    <li class="mobile-menu__item"><a href="/ueber-uns/">Über uns</a></li>
-    <li class="mobile-menu__item"><a href="/kontakt/">Kontakt</a></li>
-  </ul>
-  <div class="mobile-menu__foot mobile-menu__item">
-    <a class="btn btn--accent" href="/termin/">
-      <Icon name="calendar" size={16} />
-      Termin vereinbaren
-    </a>
-    <a class="btn btn--ghost" href="tel:+4962177735844">
-      <Icon name="phone" size={16} />
-      Anrufen
-    </a>
-    <ThemeToggle labeled />
-  </div>
-</nav>
-
-<script>
-  const burger = document.getElementById('burger');
-  const menu = document.getElementById('mobile-menu');
-  const header = document.getElementById('site-header');
-
-  function toggleMenu(force?: boolean) {
-    const open = force ?? !menu?.classList.contains('is-open');
-    menu?.classList.toggle('is-open', open);
-    header?.classList.toggle('menu-open', open);
-    burger?.setAttribute('aria-expanded', String(open));
-    burger?.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
-    document.body.style.overflow = open ? 'hidden' : '';
-  }
-
-  burger?.addEventListener('click', () => toggleMenu());
-  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => toggleMenu(false)));
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && menu?.classList.contains('is-open')) toggleMenu(false);
-  });
-</script>

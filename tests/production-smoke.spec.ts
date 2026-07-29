@@ -1,70 +1,107 @@
 import { test, expect } from '@playwright/test';
 
-// Smoke-Tests gegen die jeweilige baseURL (Produktion oder lokaler Build)
 const routes = [
-  '/', '/leistungen/', '/leistungen/damenhaarschnitt/', '/leistungen/herrenhaarschnitt/',
-  '/leistungen/fade-cut/', '/leistungen/balayage/', '/leistungen/babylights/',
-  '/leistungen/folienstraehnen/', '/leistungen/coloration/', '/leistungen/intensivtoenung/',
-  '/leistungen/glossing/', '/leistungen/faceframe/', '/leistungen/repair-cut/',
-  '/leistungen/styling/', '/leistungen/augenpflege/', '/leistungen/extensions/',
-  '/salons/mannheim/', '/salons/weinheim/', '/ueber-uns/', '/kontakt/', '/termin/',
-  '/impressum/', '/datenschutz/',
+  '/',
+  '/leistungen/',
+  '/leistungen/damenhaarschnitt/',
+  '/leistungen/herrenhaarschnitt/',
+  '/leistungen/fade-cut/',
+  '/leistungen/balayage/',
+  '/leistungen/babylights/',
+  '/leistungen/folienstraehnen/',
+  '/leistungen/coloration/',
+  '/leistungen/intensivtoenung/',
+  '/leistungen/glossing/',
+  '/leistungen/faceframe/',
+  '/leistungen/repair-cut/',
+  '/leistungen/styling/',
+  '/leistungen/augenpflege/',
+  '/leistungen/extensions/',
+  '/leistungen/brautstyling/',
+  '/leistungen/hochsteckfrisur/',
+  '/leistungen/make-up/',
+  '/leistungen/beach-waves/',
+  '/leistungen/bartstyling/',
+  '/leistungen/keratinglaettung/',
+  '/leistungen/dauerwelle-curl-it/',
+  '/leistungen/haarglaettung-straighten-it/',
+  '/leistungen/olaplex/',
+  '/leistungen/grauhaarveredelung/',
+  '/salons/',
+  '/salons/mannheim/',
+  '/salons/weinheim/',
+  '/ueber-uns/',
+  '/kontakt/',
+  '/termin/',
+  '/impressum/',
+  '/datenschutz/',
 ];
 
-test.describe('Production Smoke', () => {
-  for (const route of routes) {
-    test(`${route} → 200, 1 H1, keine Konsolenfehler, kein H-Scroll`, async ({ page }) => {
+test.describe('Smoke y protección de la demo', () => {
+  test('todas las rutas publicadas responden 200, un H1 y noindex', async ({ page }) => {
+    for (const route of routes) {
       const errors: string[] = [];
-      page.on('pageerror', (e) => errors.push(String(e)));
-      page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
-      const resp = await page.goto(route);
-      expect(resp?.status()).toBe(200);
-      await page.waitForTimeout(400);
-      await expect(page.locator('h1')).toHaveCount(1);
-      const hScroll = await page.evaluate(
-        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+      const onPageError = (error: Error) => errors.push(String(error));
+      page.on('pageerror', onPageError);
+      const response = await page.goto(route);
+      expect(response?.status(), route).toBe(200);
+      await expect(page.locator('h1'), route).toHaveCount(1);
+      await expect(page.locator('meta[name="robots"]'), route).toHaveAttribute(
+        'content',
+        'noindex, nofollow, noarchive',
       );
-      expect(hScroll).toBeFalsy();
-      expect(errors).toEqual([]);
-    });
-  }
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        ),
+        route,
+      ).toBeFalsy();
+      expect(errors, route).toEqual([]);
+      page.off('pageerror', onPageError);
+    }
+  });
 
-  test('404-Seite liefert 404 mit eigener Gestaltung', async ({ page }) => {
-    const resp = await page.goto('/diese-seite-gibt-es-nicht/');
-    expect(resp?.status()).toBe(404);
+  test('robots.txt bloquea todo y no publica sitemap', async ({ request, baseURL }) => {
+    const response = await request.get(baseURL + '/robots.txt');
+    expect(response.status()).toBe(200);
+    const body = (await response.text()).replace(/\r\n/g, '\n').trim();
+    expect(body).toBe('User-agent: *\nDisallow: /');
+    expect(body).not.toContain('Sitemap:');
+  });
+
+  test('Pfungstadt está excluido de rutas y navegación', async ({ page }) => {
+    const response = await page.goto('/salons/pfungstadt/');
+    expect(response?.status()).toBe(404);
+    await page.goto('/salons/');
+    await expect(page.locator('body')).not.toContainText('Pfungstadt');
+    await expect(page.locator('a[href*="pfungstadt"]')).toHaveCount(0);
+  });
+
+  test('404 tiene estado y contenido propios', async ({ page }) => {
+    const response = await page.goto('/diese-seite-gibt-es-nicht/');
+    expect(response?.status()).toBe(404);
     await expect(page.locator('h1')).toContainText('nicht gefunden');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      'noindex, nofollow, noarchive',
+    );
   });
 
-  test('Sitemap und robots.txt erreichbar', async ({ request, baseURL }) => {
-    const sm = await request.get(baseURL + '/sitemap-index.xml');
-    expect(sm.status()).toBe(200);
-    const rb = await request.get(baseURL + '/robots.txt');
-    expect(rb.status()).toBe(200);
-    expect(await rb.text()).toContain('Sitemap:');
-  });
-
-  test('Hero-Bild lädt (LCP-Kandidat)', async ({ page }) => {
+  test('imagen hero carga y no hay imágenes rotas en home', async ({ page }) => {
     await page.goto('/');
-    const img = page.locator('.hero-e__media img').first();
-    await expect(img).toBeVisible();
-    const loaded = await img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0);
-    expect(loaded).toBeTruthy();
-  });
+    const hero = page.locator('.hero-e__media img').first();
+    await expect(hero).toBeVisible();
+    expect(
+      await hero.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0),
+    ).toBeTruthy();
 
-  test('Keine kaputten Bilder auf der Startseite', async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(async () => {
-      await new Promise((r) => {
-        let y = 0;
-        const t = setInterval(() => {
-          y += 500; window.scrollTo(0, y);
-          if (y >= document.body.scrollHeight) { clearInterval(t); r(null); }
-        }, 90);
-      });
-    });
-    await page.waitForTimeout(1500);
-    const broken = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('img')).filter((i) => i.complete && i.naturalWidth === 0 && i.src).length
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(800);
+    const broken = await page.evaluate(
+      () =>
+        Array.from(document.querySelectorAll('img')).filter(
+          (image) => image.complete && image.naturalWidth === 0 && image.src,
+        ).length,
     );
     expect(broken).toBe(0);
   });

@@ -1,0 +1,136 @@
+<testsuites id="" name="" tests="49" failures="0" skipped="3" errors="0" time="64.50784599999999">
+<testsuite name="carousel.spec.ts" timestamp="2026-07-29T00:41:44.808Z" hostname="chromium" tests="4" failures="0" skipped="0" time="20.017" errors="0">
+<testcase name="Rezensions-Karussell › Pfeile, Dots, Tastatur und Swipe funktionieren" classname="carousel.spec.ts" time="6.299">
+</testcase>
+<testcase name="Rezensions-Karussell › Autoplay pausiert nach Interaktion" classname="carousel.spec.ts" time="8.779">
+</testcase>
+<testcase name="Rezensions-Karussell › „mehr lesen&quot; klappt langen Review-Text auf" classname="carousel.spec.ts" time="1.936">
+</testcase>
+<testcase name="Rezensions-Karussell › Karussell funktioniert im Dark Mode" classname="carousel.spec.ts" time="3.003">
+</testcase>
+</testsuite>
+<testsuite name="contact-worker.spec.ts" timestamp="2026-07-29T00:41:44.808Z" hostname="chromium" tests="6" failures="0" skipped="0" time="0.115" errors="0">
+<testcase name="Cloudflare contact endpoint › valida campos vacíos, e-mail, consentimiento y Turnstile" classname="contact-worker.spec.ts" time="0.042">
+</testcase>
+<testcase name="Cloudflare contact endpoint › rechaza Turnstile incorrecto" classname="contact-worker.spec.ts" time="0.009">
+</testcase>
+<testcase name="Cloudflare contact endpoint › aplica rate limiting antes de enviar" classname="contact-worker.spec.ts" time="0.026">
+</testcase>
+<testcase name="Cloudflare contact endpoint › sanitiza HTML y confirma solo tras entrega" classname="contact-worker.spec.ts" time="0.024">
+</testcase>
+<testcase name="Cloudflare contact endpoint › error de entrega produce error real, no éxito" classname="contact-worker.spec.ts" time="0.005">
+</testcase>
+<testcase name="Cloudflare contact endpoint › sin bindings devuelve not_configured" classname="contact-worker.spec.ts" time="0.009">
+</testcase>
+</testsuite>
+<testsuite name="dark-mode-visual.spec.ts" timestamp="2026-07-29T00:41:44.808Z" hostname="chromium" tests="7" failures="0" skipped="0" time="13.383" errors="0">
+<testcase name="Dark Mode – visuelle Integrität › / rendert in Dunkel ohne Fehler und ohne Horizontal-Scroll" classname="dark-mode-visual.spec.ts" time="2.273">
+</testcase>
+<testcase name="Dark Mode – visuelle Integrität › /leistungen/ rendert in Dunkel ohne Fehler und ohne Horizontal-Scroll" classname="dark-mode-visual.spec.ts" time="1.516">
+</testcase>
+<testcase name="Dark Mode – visuelle Integrität › /leistungen/balayage/ rendert in Dunkel ohne Fehler und ohne Horizontal-Scroll" classname="dark-mode-visual.spec.ts" time="1.427">
+</testcase>
+<testcase name="Dark Mode – visuelle Integrität › /salons/mannheim/ rendert in Dunkel ohne Fehler und ohne Horizontal-Scroll" classname="dark-mode-visual.spec.ts" time="1.684">
+</testcase>
+<testcase name="Dark Mode – visuelle Integrität › /kontakt/ rendert in Dunkel ohne Fehler und ohne Horizontal-Scroll" classname="dark-mode-visual.spec.ts" time="1.415">
+</testcase>
+<testcase name="Dark Mode – visuelle Integrität › Theme-Wechsel erzeugt keine Layout-Sprünge" classname="dark-mode-visual.spec.ts" time="3.645">
+</testcase>
+<testcase name="Dark Mode – visuelle Integrität › Logo und Header in beiden Modi sichtbar" classname="dark-mode-visual.spec.ts" time="1.423">
+</testcase>
+</testsuite>
+<testsuite name="forms.spec.ts" timestamp="2026-07-29T00:41:44.808Z" hostname="chromium" tests="6" failures="0" skipped="0" time="17.286" errors="0">
+<testcase name="Formulario de contacto real › campos vacíos muestran errores y no envían" classname="forms.spec.ts" time="2.127">
+</testcase>
+<testcase name="Formulario de contacto real › rechaza e-mail incorrecto y consentimiento ausente" classname="forms.spec.ts" time="3.917">
+</testcase>
+<testcase name="Formulario de contacto real › muestra loading, evita doble envío y solo confirma tras respuesta válida" classname="forms.spec.ts" time="2.932">
+</testcase>
+<testcase name="Formulario de contacto real › muestra el error real del endpoint" classname="forms.spec.ts" time="2.781">
+</testcase>
+<testcase name="Formulario de contacto real › submit no contiene ni abre mailto" classname="forms.spec.ts" time="4.163">
+</testcase>
+<testcase name="Formulario de contacto real › sin credenciales no simula éxito y mantiene alternativas" classname="forms.spec.ts" time="1.366">
+</testcase>
+</testsuite>
+<testsuite name="navigation.spec.ts" timestamp="2026-07-29T00:41:44.808Z" hostname="chromium" tests="6" failures="0" skipped="0" time="8.559" errors="0">
+<testcase name="Navigation › mobile no contiene burger ni navegación oculta" classname="navigation.spec.ts" time="1.363">
+</testcase>
+<testcase name="Navigation › barra inferior tiene cinco acciones, Termin principal y estado activo accesible" classname="navigation.spec.ts" time="1.011">
+</testcase>
+<testcase name="Navigation › header pasa a estado compacto sin salto de anchura" classname="navigation.spec.ts" time="1.309">
+</testcase>
+<testcase name="Navigation › navegación de escritorio mantiene dropdowns" classname="navigation.spec.ts" time="1.884">
+</testcase>
+<testcase name="Navigation › enlaces internos principales y breadcrumbs funcionan" classname="navigation.spec.ts" time="1.622">
+</testcase>
+<testcase name="Navigation › skip link está disponible por teclado" classname="navigation.spec.ts" time="1.37">
+</testcase>
+</testsuite>
+<testsuite name="production-smoke.spec.ts" timestamp="2026-07-29T00:41:44.808Z" hostname="chromium" tests="5" failures="0" skipped="0" time="16.833" errors="0">
+<testcase name="Smoke y protección de la demo › todas las rutas publicadas responden 200, un H1 y noindex" classname="production-smoke.spec.ts" time="12.225">
+</testcase>
+<testcase name="Smoke y protección de la demo › robots.txt bloquea todo y no publica sitemap" classname="production-smoke.spec.ts" time="0.051">
+</testcase>
+<testcase name="Smoke y protección de la demo › Pfungstadt está excluido de rutas y navegación" classname="production-smoke.spec.ts" time="1.152">
+</testcase>
+<testcase name="Smoke y protección de la demo › 404 tiene estado y contenido propios" classname="production-smoke.spec.ts" time="1.111">
+</testcase>
+<testcase name="Smoke y protección de la demo › imagen hero carga y no hay imágenes rotas en home" classname="production-smoke.spec.ts" time="2.294">
+</testcase>
+</testsuite>
+<testsuite name="responsive-layout.spec.ts" timestamp="2026-07-29T00:41:44.808Z" hostname="chromium" tests="8" failures="0" skipped="0" time="13.559" errors="0">
+<testcase name="Layout responsive, contraste y safe area › header/hero claro y oscuro @ 360x800" classname="responsive-layout.spec.ts" time="1.817">
+</testcase>
+<testcase name="Layout responsive, contraste y safe area › header/hero claro y oscuro @ 375x812" classname="responsive-layout.spec.ts" time="1.757">
+</testcase>
+<testcase name="Layout responsive, contraste y safe area › header/hero claro y oscuro @ 390x844" classname="responsive-layout.spec.ts" time="1.796">
+</testcase>
+<testcase name="Layout responsive, contraste y safe area › header/hero claro y oscuro @ 412x915" classname="responsive-layout.spec.ts" time="1.732">
+</testcase>
+<testcase name="Layout responsive, contraste y safe area › rutas clave no desbordan a 360 px y tienen un H1" classname="responsive-layout.spec.ts" time="2.665">
+</testcase>
+<testcase name="Layout responsive, contraste y safe area › touch targets visibles miden al menos 44×44 px" classname="responsive-layout.spec.ts" time="1.187">
+</testcase>
+<testcase name="Layout responsive, contraste y safe area › tabs permiten scroll horizontal propio sin desbordar la página" classname="responsive-layout.spec.ts" time="1.091">
+</testcase>
+<testcase name="Layout responsive, contraste y safe area › barra inferior respeta safe-area y no tapa el footer" classname="responsive-layout.spec.ts" time="1.514">
+</testcase>
+</testsuite>
+<testsuite name="theme-toggle.spec.ts" timestamp="2026-07-29T00:41:44.808Z" hostname="chromium" tests="4" failures="0" skipped="0" time="7.577" errors="0">
+<testcase name="Theme-Toggle (Hell / Dunkel / System) › Selector vorhanden, wechselt data-theme und persistiert" classname="theme-toggle.spec.ts" time="2.49">
+</testcase>
+<testcase name="Theme-Toggle (Hell / Dunkel / System) › System-Modus folgt prefers-color-scheme" classname="theme-toggle.spec.ts" time="2.525">
+</testcase>
+<testcase name="Theme-Toggle (Hell / Dunkel / System) › Kein falscher Theme-Flash: data-theme vor erstem Paint gesetzt" classname="theme-toggle.spec.ts" time="1.227">
+</testcase>
+<testcase name="Theme-Toggle (Hell / Dunkel / System) › Toggle per Tastatur erreichbar mit sichtbarem Fokus" classname="theme-toggle.spec.ts" time="1.335">
+</testcase>
+</testsuite>
+<testsuite name="visual-final.spec.ts" timestamp="2026-07-29T00:41:44.808Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="capturas móviles claras y oscuras" classname="visual-final.spec.ts">
+<properties>
+<property name="skip" value="Solo se ejecuta para la auditoría visual final.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="cabecera inicial en cuatro viewports, claro y oscuro" classname="visual-final.spec.ts">
+<properties>
+<property name="skip" value="Solo se ejecuta para la auditoría visual final.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="capturas de escritorio claras y oscuras" classname="visual-final.spec.ts">
+<properties>
+<property name="skip" value="Solo se ejecuta para la auditoría visual final.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

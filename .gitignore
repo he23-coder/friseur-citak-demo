@@ -1,6 +1,12 @@
 node_modules/
 dist/
 .astro/
+.wrangler/
+.dev.vars
+.dev.vars.*
+.agents/skills/
+**/__pycache__/
+*.pyc
 *.log
 .DS_Store
 .env

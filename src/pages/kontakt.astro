@@ -23,36 +23,36 @@ import { salons, business } from '@/data/site';
         <p class="meta-label">Rückruf anfordern</p>
         <h2>Wir rufen Sie zurück</h2>
         <p class="muted">
-          Hinterlassen Sie Ihre Daten und Ihren Wunschzeitraum – das Formular öffnet Ihr
-          E-Mail-Programm mit einer vorbereiteten Nachricht an uns.
+          Hinterlassen Sie Ihre Daten und Ihren Wunschzeitraum. Ihre Anfrage wird sicher
+          übermittelt, ohne ein E-Mail-Programm zu öffnen.
         </p>
 
         <div class="form__success" id="form-success" role="status">
-          <strong>Ihr E-Mail-Programm wurde geöffnet.</strong>
+          <strong>Vielen Dank für Ihre Anfrage.</strong>
           <p class="mb-0 small muted">
-            Senden Sie die vorbereitete Nachricht einfach ab – wir melden uns zeitnah bei Ihnen.
-            Alternativ erreichen Sie uns unter <a href={`mailto:${business.email}`} style="text-decoration:underline;">{business.email}</a>.
+            Ihre Nachricht wurde erfolgreich übermittelt. Wir melden uns schnellstmöglich bei Ihnen.
           </p>
         </div>
 
         <form class="form mt-2" id="contact-form" novalidate>
+          <div class="form__status" id="form-status" role="alert" aria-live="polite"></div>
           <div class="form__row form__row--2">
             <div class="form__field">
               <label for="f-name">Vor- und Nachname *</label>
-              <input id="f-name" name="name" type="text" autocomplete="name" required />
-              <span class="form__error">Bitte geben Sie Ihren Namen an.</span>
+              <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-error" />
+              <span class="form__error" id="f-name-error">Bitte geben Sie Ihren Namen an.</span>
             </div>
             <div class="form__field">
               <label for="f-phone">Telefonnummer *</label>
-              <input id="f-phone" name="phone" type="tel" autocomplete="tel" required />
-              <span class="form__error">Bitte geben Sie Ihre Telefonnummer an.</span>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel" required aria-describedby="f-phone-error" />
+              <span class="form__error" id="f-phone-error">Bitte geben Sie eine gültige Telefonnummer an.</span>
             </div>
           </div>
           <div class="form__row form__row--2">
             <div class="form__field">
               <label for="f-email">E-Mail *</label>
-              <input id="f-email" name="email" type="email" autocomplete="email" required />
-              <span class="form__error">Bitte geben Sie eine gültige E-Mail-Adresse an.</span>
+              <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="f-email-error" />
+              <span class="form__error" id="f-email-error">Bitte geben Sie eine gültige E-Mail-Adresse an.</span>
             </div>
             <div class="form__field">
               <label for="f-salon">Bevorzugter Salon</label>
@@ -65,25 +65,61 @@ import { salons, business } from '@/data/site';
           </div>
           <div class="form__field">
             <label for="f-when">Wann wünschen Sie einen Rückruf? *</label>
-            <input id="f-when" name="when" type="text" placeholder="z. B. werktags ab 17 Uhr" required />
-            <span class="form__error">Bitte nennen Sie uns einen Zeitraum.</span>
+            <input id="f-when" name="when" type="text" placeholder="z. B. werktags ab 17 Uhr" required aria-describedby="f-when-error" />
+            <span class="form__error" id="f-when-error">Bitte nennen Sie uns einen Zeitraum.</span>
           </div>
           <div class="form__field">
             <label for="f-msg">Ihre Nachricht (optional)</label>
             <textarea id="f-msg" name="message" rows="4"></textarea>
           </div>
+          <div class="form__field form__honeypot" aria-hidden="true">
+            <label for="f-website">Website</label>
+            <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="form__field form__field--check">
+            <label class="check-control" for="f-consent">
+              <input id="f-consent" name="consent" type="checkbox" required aria-describedby="f-consent-error" />
+              <span>
+                Ich habe die <a href="/datenschutz/">Datenschutzerklärung</a> gelesen und stimme
+                der Verarbeitung meiner Angaben zur Bearbeitung der Anfrage zu. *
+              </span>
+            </label>
+            <span class="form__error" id="f-consent-error">Bitte stimmen Sie der Datenschutzerklärung zu.</span>
+          </div>
+          <div class="form__field">
+            <div id="turnstile-widget" class="turnstile-widget" aria-label="Sicherheitsprüfung"></div>
+            <input id="f-turnstile" name="turnstileToken" type="hidden" />
+            <span class="form__error" id="f-turnstile-error">Bitte bestätigen Sie die Sicherheitsprüfung.</span>
+            <p class="form__config-note" id="form-config-note">
+              Sichere Formularverbindung wird geprüft …
+            </p>
+          </div>
           <p class="form__note">
-            Mit dem Absenden öffnet sich Ihr E-Mail-Programm. Ihre Daten werden ausschließlich zur
-            Bearbeitung Ihrer Anfrage verwendet. Details in der
+            Ihre Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet und nicht
+            unnötig protokolliert. Details in der
             <a href="/datenschutz/" style="text-decoration:underline;">Datenschutzerklärung</a>.
           </p>
           <div>
-            <button class="btn btn--accent" type="submit">
-              <Icon name="mail" size={16} />
-              Nachricht vorbereiten
+            <button class="btn btn--accent" id="form-submit" type="submit" disabled>
+              <span class="form-submit__icon"><Icon name="mail" size={16} /></span>
+              <span class="form-submit__label">Nachricht senden</span>
             </button>
           </div>
         </form>
+
+        <div class="contact-alternatives mt-2" id="contact-alternatives">
+          <p class="meta-label">Direkte Alternativen</p>
+          <div class="btn-row">
+            <a class="btn btn--ghost btn--sm" href={salons[0].phoneHref}>
+              <Icon name="phone" size={16} />
+              Jetzt anrufen
+            </a>
+            <a class="btn btn--ghost btn--sm" href="/termin/">
+              <Icon name="calendar" size={16} />
+              Online buchen
+            </a>
+          </div>
+        </div>
       </div>
 
       <div class="rv" style="--d:.12s;display:grid;gap:1.4rem;align-content:start;">
@@ -130,13 +166,101 @@ import { salons, business } from '@/data/site';
   <script>
     const form = document.getElementById('contact-form') as HTMLFormElement;
     const success = document.getElementById('form-success');
+    const status = document.getElementById('form-status');
+    const submit = document.getElementById('form-submit') as HTMLButtonElement;
+    const submitLabel = submit?.querySelector('.form-submit__label');
+    const configNote = document.getElementById('form-config-note');
+    const turnstileToken = document.getElementById('f-turnstile') as HTMLInputElement;
+    let endpointConfigured = false;
+    let widgetId: string | undefined;
 
-    function setValidity(input: HTMLInputElement, valid: boolean) {
+    function setValidity(input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, valid: boolean, message?: string) {
       input.closest('.form__field')?.classList.toggle('is-invalid', !valid);
+      input.setAttribute('aria-invalid', String(!valid));
+      if (message) {
+        const error = input.closest('.form__field')?.querySelector('.form__error');
+        if (error) error.textContent = message;
+      }
       return valid;
     }
 
-    form?.addEventListener('submit', (e) => {
+    function setStatus(message = '', type: 'error' | 'info' = 'info') {
+      if (!status) return;
+      status.textContent = message;
+      status.className = `form__status ${message ? 'is-visible' : ''} ${type === 'error' ? 'is-error' : ''}`;
+    }
+
+    function setLoading(loading: boolean) {
+      submit.disabled = loading || !endpointConfigured;
+      submit.classList.toggle('is-loading', loading);
+      submit.setAttribute('aria-busy', String(loading));
+      if (submitLabel) submitLabel.textContent = loading ? 'Wird gesendet …' : 'Nachricht senden';
+    }
+
+    function loadTurnstile(siteKey: string) {
+      const render = () => {
+        const turnstile = (window as any).turnstile;
+        if (!turnstile || !document.getElementById('turnstile-widget')) return;
+        if (widgetId) turnstile.remove(widgetId);
+        widgetId = turnstile.render('#turnstile-widget', {
+          sitekey: siteKey,
+          action: 'contact',
+          theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light',
+          callback: (token: string) => {
+            turnstileToken.value = token;
+            turnstileToken.closest('.form__field')?.classList.remove('is-invalid');
+          },
+          'expired-callback': () => { turnstileToken.value = ''; },
+          'error-callback': () => {
+            turnstileToken.value = '';
+            setStatus('Die Sicherheitsprüfung konnte nicht geladen werden. Bitte versuchen Sie es erneut.', 'error');
+          },
+        });
+      };
+
+      if ((window as any).turnstile) {
+        render();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.defer = true;
+      script.addEventListener('load', render, { once: true });
+      script.addEventListener('error', () => {
+        setStatus('Die Sicherheitsprüfung konnte nicht geladen werden. Bitte nutzen Sie Telefon oder Online-Buchung.', 'error');
+      });
+      document.head.appendChild(script);
+    }
+
+    async function initForm() {
+      try {
+        const response = await fetch('/api/contact/config', { headers: { accept: 'application/json' } });
+        const config = await response.json();
+        endpointConfigured = Boolean(config.configured && config.siteKey);
+        if (!endpointConfigured) {
+          if (configNote) {
+            configNote.textContent =
+              'Das Online-Formular ist noch nicht aktiviert. Bitte nutzen Sie Telefon oder Online-Buchung.';
+            configNote.classList.add('is-warning');
+          }
+          submit.disabled = true;
+          return;
+        }
+        if (configNote) configNote.textContent = 'Geschützt durch Cloudflare Turnstile.';
+        loadTurnstile(config.siteKey);
+        submit.disabled = false;
+      } catch {
+        if (configNote) {
+          configNote.textContent =
+            'Das Online-Formular ist derzeit nicht erreichbar. Bitte nutzen Sie Telefon oder Online-Buchung.';
+          configNote.classList.add('is-warning');
+        }
+        submit.disabled = true;
+      }
+    }
+
+    form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = form.querySelector<HTMLInputElement>('#f-name')!;
       const phone = form.querySelector<HTMLInputElement>('#f-phone')!;
@@ -144,38 +268,73 @@ import { salons, business } from '@/data/site';
       const when = form.querySelector<HTMLInputElement>('#f-when')!;
       const salon = form.querySelector<HTMLSelectElement>('#f-salon')!;
       const msg = form.querySelector<HTMLTextAreaElement>('#f-msg')!;
+      const consent = form.querySelector<HTMLInputElement>('#f-consent')!;
+      const website = form.querySelector<HTMLInputElement>('#f-website')!;
 
       let ok = true;
       ok = setValidity(name, name.value.trim().length >= 2) && ok;
-      ok = setValidity(phone, phone.value.trim().length >= 5) && ok;
+      ok = setValidity(phone, /^[+()\d\s./-]{5,40}$/.test(phone.value.trim())) && ok;
       ok = setValidity(email, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) && ok;
       ok = setValidity(when, when.value.trim().length >= 3) && ok;
+      ok = setValidity(consent, consent.checked) && ok;
+      ok = setValidity(turnstileToken, turnstileToken.value.trim().length > 0) && ok;
       if (!ok) {
-        form.querySelector('.is-invalid input')?.focus();
+        setStatus('Bitte prüfen Sie die markierten Felder.', 'error');
+        (form.querySelector('.is-invalid input:not([type="hidden"]), .is-invalid textarea, .is-invalid select') as HTMLElement)?.focus();
         return;
       }
 
-      const body = [
-        `Name: ${name.value.trim()}`,
-        `Telefon: ${phone.value.trim()}`,
-        `E-Mail: ${email.value.trim()}`,
-        `Bevorzugter Salon: ${salon.value}`,
-        `Rückruf-Zeitraum: ${when.value.trim()}`,
-        msg.value.trim() ? `\nNachricht:\n${msg.value.trim()}` : '',
-      ].join('\n');
-
-      const mailto = `mailto:info@friseur-citak.de?subject=${encodeURIComponent(
-        `Rückrufbitte über die Website – ${name.value.trim()}`
-      )}&body=${encodeURIComponent(body)}`;
-
-      window.location.href = mailto;
-      success?.classList.add('is-visible');
-      success?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setStatus();
+      setLoading(true);
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify({
+            name: name.value,
+            phone: phone.value,
+            email: email.value,
+            salon: salon.value,
+            when: when.value,
+            message: msg.value,
+            consent: consent.checked,
+            turnstileToken: turnstileToken.value,
+            website: website.value,
+          }),
+        });
+        const result = await response.json();
+        if (!response.ok || !result.ok) {
+          if (result.fieldErrors) {
+            Object.entries(result.fieldErrors).forEach(([field, message]) => {
+              const input = form.elements.namedItem(field) as HTMLInputElement | null;
+              if (input) setValidity(input, false, String(message));
+            });
+          }
+          throw new Error(result.message || 'Ihre Anfrage konnte nicht gesendet werden.');
+        }
+        form.reset();
+        turnstileToken.value = '';
+        (window as any).turnstile?.reset(widgetId);
+        success?.classList.add('is-visible');
+        success?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (error) {
+        setStatus(
+          error instanceof Error ? error.message : 'Ihre Anfrage konnte nicht gesendet werden.',
+          'error',
+        );
+      } finally {
+        setLoading(false);
+      }
     });
 
-    form?.querySelectorAll('input, textarea').forEach((el) =>
-      el.addEventListener('input', () => el.closest('.form__field')?.classList.remove('is-invalid'))
+    form?.querySelectorAll('input, textarea, select').forEach((el) =>
+      el.addEventListener('input', () => {
+        el.closest('.form__field')?.classList.remove('is-invalid');
+        el.setAttribute('aria-invalid', 'false');
+      })
     );
+
+    initForm();
   </script>
 </Base>
 

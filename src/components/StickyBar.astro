@@ -1,22 +1,27 @@
 ---
 import Icon from '@/components/Icon.astro';
-import { salons } from '@/data/site';
 
-// Sticky Mobile-Aktionsleiste: Anrufen / Termin / Route (Salon-Auswahl auf /termin/)
-const mannheim = salons[0];
+const path = Astro.url.pathname;
+const items = [
+  { href: '/', label: 'Start', icon: 'heart' as const },
+  { href: '/leistungen/', label: 'Leistungen', icon: 'scissors' as const },
+  { href: '/termin/', label: 'Termin', icon: 'calendar' as const, primary: true },
+  { href: '/salons/', label: 'Salons', icon: 'pin' as const },
+  { href: '/kontakt/', label: 'Kontakt', icon: 'mail' as const },
+];
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href) || (href === '/salons/' && path.startsWith('/salons/'));
 ---
 
-<div class="sticky-bar" aria-label="Schnellzugriff">
-  <a href={mannheim.phoneHref} aria-label={`Anrufen: ${mannheim.phoneDisplay}`}>
-    <Icon name="phone" size={19} />
-    Anrufen
-  </a>
-  <a href="/termin/" class="sticky-bar__primary">
-    <Icon name="calendar" size={19} />
-    Termin
-  </a>
-  <a href={mannheim.googleMapsUrl} target="_blank" rel="noopener noreferrer" aria-label="Route zum Salon planen">
-    <Icon name="pin" size={19} />
-    Route
-  </a>
-</div>
+<nav class="sticky-bar" aria-label="Mobile Navigation">
+  {items.map((item) => (
+    <a
+      href={item.href}
+      class:list={[{ 'sticky-bar__primary': item.primary }]}
+      aria-current={isActive(item.href) ? 'page' : undefined}
+    >
+      <Icon name={item.icon} size={19} />
+      <span>{item.label}</span>
+    </a>
+  ))}
+</nav>

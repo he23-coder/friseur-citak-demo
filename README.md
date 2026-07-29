@@ -1,117 +1,116 @@
-# Hair Lounge by Citak — „Salon Editorial" (v2)
+# Hair Lounge by Citak — “Salon Editorial”
 
-Rediseño visual completo de la demo de **friseur-citak.de**: lujo editorial contemporáneo
-con modo oscuro diseñado a medida. Astro 5 + TypeScript, build estático en Cloudflare Workers.
+Demo comercial del rediseño de [friseur-citak.de](https://friseur-citak.de/), construida
+con Astro 5, TypeScript, CSS propio y Cloudflare Workers con Static Assets.
 
-**Live-Demo:** https://friseur-citak-demo.geraldhe21.workers.dev
+**Demo:** https://friseur-citak-demo.geraldhe21.workers.dev
 
-> v1 (estructura + contenido) → v2 (rediseño visual profundo con 3 skills de diseño).
-> Dirección visual duradera: [`DESIGN.md`](DESIGN.md) · Contexto de producto: [`PRODUCT.md`](PRODUCT.md)
-> Auditorías: [`audits/design-before.md`](audits/design-before.md) · [`audits/design-after.md`](audits/design-after.md)
+La dirección visual se conserva en [`DESIGN.md`](DESIGN.md), el contexto de producto en
+[`PRODUCT.md`](PRODUCT.md) y la investigación del sistema visual en
+[`DESIGN-SYSTEM-RESEARCH.md`](DESIGN-SYSTEM-RESEARCH.md).
 
----
+## Estado actual
 
-## Highlights v2
+- navegación móvil siempre visible, sin burger: tabs horizontales y barra inferior de
+  cinco acciones;
+- header sólido y legible, con estado inicial y estado compacto al hacer scroll;
+- CTAs en cápsula y radios jerárquicos para inputs, paneles y bloques visuales;
+- 24 páginas de servicio y dos salones activos;
+- modo claro, oscuro y sistema con persistencia;
+- reseñas verificadas con fecha visible y carrusel accesible;
+- formulario real sobre Cloudflare Worker, con validación doble, consentimiento,
+  Turnstile, rate limiting y entrega mediante binding de correo;
+- demo bloqueada mediante meta robots, `X-Robots-Tag` y `robots.txt`.
 
-- **Nuevo mundo visual „Salon Editorial"**: placa tipográfica que solapa la fotografía real,
-  Playfair Display Variable + Manrope, grano de película, hairlines, un acento dorado.
-- **Modo oscuro completo**: Hell / Dunkel / System, sin flash (inline script pre-paint),
-  persistencia en localStorage, `theme-color` dinámico, selector accesible en header y menú.
-- **Servicios como índice editorial** (sticky + lista + preview al hover) en lugar de
-  rejillas de tarjetas iguales.
-- **Cada ubicación con carácter propio** (serie B/N Mannheim · color cálido Weinheim).
-- **Reseñas reales de Google** en carrusel editorial (serif, „mehr lesen", swipe, teclado,
-  pausa al interactuar). Sin schema de reseñas autopromocionales.
-- **178 tests Playwright** (7 specs) + **Lighthouse 95–100** en las 4 combinaciones.
+Pfungstadt no se presenta como salón activo de Hair Lounge: la dirección opera
+actualmente bajo otra marca y titular. Ver
+[`docs/pfungstadt-verification.md`](docs/pfungstadt-verification.md).
 
 ## Tecnología
 
-| Bereich | Wahl |
+| Área | Elección |
 | --- | --- |
-| Framework | [Astro 5](https://astro.build) (statischer Output) |
-| Sprache | TypeScript |
-| Styling | Design-System propio con CSS-Tokens (Hell/Dunkel) |
-| Fonts | Playfair Display Variable + Manrope (selbst gehostet via `@fontsource`) |
-| Hosting | Cloudflare Workers (Static Assets) via Wrangler |
-| Tests | Playwright Test (7 Spec-Dateien, 178 Tests) |
+| Framework | Astro 5, output estático |
+| Lenguaje | TypeScript |
+| UI | CSS propio basado en design tokens |
+| Fuentes | Playfair Display Variable + Manrope, autoalojadas |
+| Runtime | Cloudflare Worker + Static Assets |
+| Formulario | Worker API, Turnstile, Rate Limiting y Email Service |
+| Pruebas | Playwright con reportes JSON y JUnit |
 
-## Skills de diseño instaladas y aplicadas
-
-| Skill | Instalada | Ruta | Invocada | Aplicación concreta |
-| --- | :-: | --- | :-: | --- |
-| Impeccable | Sí | `.agents/skills/impeccable/` | Sí (init, document, shape, critique, bolder, typeset, layout, animate, adapt, optimize, audit, polish, harden) | `PRODUCT.md`+`DESIGN.md`, auditoría v1 (27 hallazgos), craft-floor (contraste/medida/movimiento), bug de pointer-capture del carrusel, disciplina tipográfica, hardening de estados |
-| Taste – design-taste-frontend | Sí | `.agents/skills/design-taste-frontend/` | Sí (audit-first + pre-flight mecánico) | Hero ≤ 4 elementos, eyebrows ≤ 1/3, veto de rejillas iguales, shape/color lock, cambio de serif (Fraunces→Playfair), copy audit |
-| Taste – redesign-existing-projects | Sí | `.agents/skills/redesign-existing-projects/` | Sí (scan→diagnose→fix) | Preservación de IA/URLs/funciones, prioridad font→color→estados→layout, 100dvh, estados hover/active/focus |
-| Taste – high-end-visual-design | Sí | `.agents/skills/high-end-visual-design/` | Sí (arquetipos + checklist) | Arquetipo „Editorial Luxury" + „Editorial Split", grano fijo, bezier propio, blur solo en fijos |
-| UI UX Pro Max | Sí | `.agents/skills/ui-ux-pro-max/` | Sí (script oficial de búsqueda) | [`DESIGN-SYSTEM-RESEARCH.md`](DESIGN-SYSTEM-RESEARCH.md): dirección tipográfica confirmada, checklist pre-delivery; rechazados Liquid Glass y paleta azul (documentado) |
-
-Notas de verificación: cada skill contiene su `SKILL.md` legible (no vacío); Impeccable incluye
-además `scripts/`, `reference/` y `agents/`; UI UX Pro Max incluye `scripts/search.py`
-(ejecutado con éxito). Las skills viven dentro de este repositorio en `.agents/skills/`.
-Configuración aplicada: `DESIGN_VARIANCE 7/10`, `MOTION_INTENSITY 5/10`, `VISUAL_DENSITY 4/10`.
-
-## Instalación & desarrollo
+## Desarrollo
 
 ```bash
-npm install
-npm run dev        # http://localhost:4321
+npm ci
+npm run dev
 ```
 
-## Build & tests
+Para probar el Worker completo localmente:
 
 ```bash
-npm run build                # build estático a dist/
-npm run preview              # preview local del build
-npx playwright test          # tests contra producción
-BASE_URL=http://localhost:4321 npx playwright test   # tests contra build local
+npm run dev:worker
 ```
 
-Specs: `tests/theme-toggle.spec.ts`, `dark-mode-visual.spec.ts`, `responsive-layout.spec.ts`,
-`navigation.spec.ts`, `carousel.spec.ts`, `forms.spec.ts`, `production-smoke.spec.ts`.
-
-## Deployment (Cloudflare Workers)
+## Build y pruebas
 
 ```bash
-npm run build && npx wrangler deploy
+npm run build
+npm run test:local
+npm run test:production
 ```
 
-## Auditorías y pruebas visuales
+Los reportes auditables se escriben en `audits/playwright/` e incluyen fecha, entorno,
+base URL y estados de cada prueba. Las capturas finales se generan con:
 
-- `audits/visual-before/` — capturas de la v1 (producción, 28.07.2026)
-- `audits/visual-after/` — capturas de la v2 (ambos temas, desktop + móvil)
-- `audits/lighthouse/` — 4 informes: mobile-light, mobile-dark, desktop-light, desktop-dark
-
-## Seitenstruktur
-
-```
-/                        Startseite (Hero editorial, Trustbar, Leistungs-Index, Proof, Salons, Team, Rezensionen, Galerie, CTA)
-/leistungen/             Índice por categorías (lista editorial + imagen por categoría)
-/leistungen/<slug>/      14 páginas de servicio (2 composiciones alternadas por categoría)
-/salons/mannheim/        Equipo, precios, reseñas, mapa (serie B/N)
-/salons/weinheim/        Equipo, precios, reseñas, mapa (color cálido)
-/ueber-uns/              Historia, timeline Cagri Citak, filosofía
-/termin/                 Hub de reserva (links al sistema original)
-/kontakt/                Formulario validado (mailto), datos, mapas
-/impressum/  /datenschutz/  /404/
+```bash
+TEST_ENV=production \
+BASE_URL=https://friseur-citak-demo.geraldhe21.workers.dev \
+npm run test:visual
 ```
 
-## Herkunft der Inhalte
+## Despliegue
 
-Sin cambios respecto a la v1: todos los datos (servicios, precios, equipos, horarios,
-reseñas, historia) provienen de fuentes públicas verificables (web original + perfiles
-oficiales de Google, extraídos el 28.07.2026). Detalle completo en la sección
-„Herkunft der Inhalte" del historial de commits y en `src/data/`.
+El destino debe seguir siendo el Worker existente:
 
-## Nicht verifizierbare Daten / offene Platzhalter
+```bash
+npm run deploy
+```
 
-- **USt-IdNr.** del sitio original (formato inusual) — omitida; pendiente de confirmación del propietario.
-- **Fotos de equipo**: solo 5 de 12 miembros tienen retrato real; el resto usa loseta
-  tipográfica (sin avatares genéricos ni rostros inventados).
-- **Formulario**: funciona vía `mailto:` (como el original, con validación); preparado
-  para conectar un backend si se desea.
+El formulario no simula un envío cuando faltan credenciales. La configuración requerida
+está en [`docs/contact-form-setup.md`](docs/contact-form-setup.md).
 
-## Rechtliches
+## Rutas
 
-Demo-Projekt zu Vertriebszwecken. Inhalte und Bildmaterial stammen von der öffentlichen
-Website von Hair Lounge by Citak und dienen ausschließlich der Präsentation eines
-Redesigns gegenüber dem Inhaber.
+```text
+/                         Inicio editorial
+/leistungen/              Índice de 24 servicios
+/leistungen/<slug>/       Páginas de servicio con tres composiciones
+/salons/                   Selector de los dos salones activos
+/salons/mannheim/          Mannheim
+/salons/weinheim/          Weinheim
+/ueber-uns/                Historia y equipo
+/termin/                   Hub de reservas
+/kontakt/                  Formulario, teléfonos, mapas y alternativas
+/impressum/
+/datenschutz/
+/404/
+```
+
+## Documentación de verificación
+
+- [`docs/service-audit.md`](docs/service-audit.md)
+- [`docs/pfungstadt-verification.md`](docs/pfungstadt-verification.md)
+- [`docs/contact-form-setup.md`](docs/contact-form-setup.md)
+- [`docs/indexing.md`](docs/indexing.md)
+- [`docs/design-skills.md`](docs/design-skills.md)
+
+Los datos proceden de fuentes públicas del negocio y de perfiles públicos contrastados.
+No se añaden precios ni disponibilidad sin una fuente verificable.
+
+## Pendiente de confirmación del propietario
+
+- dirección de recepción y remitente verificado del formulario;
+- confirmación formal de la desvinculación de Pfungstadt;
+- USt-IdNr. correcta;
+- si Ombré, Painting Highlights o Granny Hair deben ofrecerse actualmente;
+- retratos que faltan de algunos miembros del equipo.

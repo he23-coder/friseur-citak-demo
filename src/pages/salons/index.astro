@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import { salons } from '@/data/site';
+import mannheimImage from '@/assets/salon/waschplatz.jpg';
+import weinheimImage from '@/assets/salon/weinheim-innen.jpg';
+
+const images = { mannheim: mannheimImage, weinheim: weinheimImage };
+---
+
+<Base
+  title="Salons in Mannheim & Weinheim | Hair Lounge by Citak"
+  description="Entdecken Sie die Hair Lounge by Citak in Mannheim und Weinheim: Adressen, Öffnungszeiten, Teams, Preise, Anfahrt und Online-Terminbuchung."
+  canonicalPath="/salons/"
+>
+  <PageHero
+    eyebrow="Hair Lounge by Citak"
+    title="Ihr Salon. Ihre Auszeit."
+    lead="Zwei Standorte, ein gemeinsamer Anspruch: typgerechte Beratung, präzises Handwerk und ein Ort, an dem Sie sich wohlfühlen."
+    crumbs={[{ label: 'Startseite', href: '/' }, { label: 'Salons' }]}
+  />
+
+  <section class="section" aria-labelledby="salons-index-heading">
+    <div class="container">
+      <h2 id="salons-index-heading" class="sr-only">Unsere Salons</h2>
+      {salons.map((salon, index) => (
+        <article class={`salon-block ${index % 2 ? 'salon-block--flip' : ''} ${index ? 'mt-3' : ''}`}>
+          <div class="salon-block__media rv rv-clip">
+            <Image
+              src={images[salon.id]}
+              alt={`${salon.name} – Innenansicht`}
+              widths={[640, 960, 1280]}
+              sizes="(max-width: 900px) 100vw, 58vw"
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
+          </div>
+          <div class="salon-block__panel rv" style="--d:.1s">
+            <p class="meta-label">{salon.city}{salon.district ? ` · ${salon.district}` : ''}</p>
+            <h2>{salon.name}</h2>
+            <ul class="salon-block__facts">
+              <li><Icon name="pin" size={16} /><span>{salon.street}, {salon.zip}</span></li>
+              {salon.hours.map((item) => (
+                <li><Icon name="clock" size={16} /><span>{item.days} {item.time}</span></li>
+              ))}
+              <li><Icon name="phone" size={16} /><a href={salon.phoneHref}>{salon.phoneDisplay}</a></li>
+            </ul>
+            <div class="btn-row">
+              <a class="btn btn--accent" href={salon.bookingUrl} target="_blank" rel="noopener noreferrer">
+                <Icon name="calendar" size={16} />
+                Termin vereinbaren
+              </a>
+              <a class="btn btn--ghost" href={`/salons/${salon.id}/`}>Salon entdecken</a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</Base>

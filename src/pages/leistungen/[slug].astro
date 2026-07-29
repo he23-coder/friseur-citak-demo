@@ -23,9 +23,10 @@ const nachher = pick('extensions-nachher.jpg');
 
 const related = service.related.map((r) => getService(r)).filter(Boolean);
 
-// Zwei Kompositionen, alterniert nach Kategorie (kein Template-Look)
-const colorCats = ['Farbe & Strähnen', 'Extensions'];
-const composition = colorCats.includes(service.category) ? 'a' : 'b';
+// Drei editoriale Kompositionen vermeiden geklonte Leistungsseiten.
+const serviceIndex = services.findIndex((item) => item.slug === service.slug);
+const compositions = ['split', 'wide', 'offset'] as const;
+const composition = compositions[Math.abs(serviceIndex) % compositions.length];
 
 const siteUrl = Astro.site ?? new URL('https://friseur-citak-demo.geraldhe21.workers.dev');
 const schema = [
@@ -63,9 +64,9 @@ const schema = [
     eyebrow={service.category}
     title={service.name}
     lead={service.intro}
-    image={composition === 'a' ? img : undefined}
+    image={composition === 'split' ? img : undefined}
     imageAlt={service.imageAlt}
-    flip={composition === 'b' && !!img}
+    flip={composition === 'split' && serviceIndex % 2 === 1}
     crumbs={[
       { label: 'Startseite', href: '/' },
       { label: 'Leistungen', href: '/leistungen/' },
@@ -84,16 +85,16 @@ const schema = [
     </div>
   </PageHero>
 
-  {composition === 'b' && img && (
-    <div class="container">
-      <div class="page-hero__media rv rv-clip" style="aspect-ratio:16/9;max-height:560px;">
+  {composition !== 'split' && img && (
+    <div class:list={['container', 'service-visual-wrap', { 'service-visual-wrap--offset': composition === 'offset' }]}>
+      <div class="page-hero__media service-visual rv rv-clip">
         <Image src={img} alt={service.imageAlt} widths={[840, 1280, 1600]} sizes="100vw" loading="eager" />
       </div>
     </div>
   )}
 
   <section class="section">
-    <div class="container split">
+    <div class:list={['container', 'split', `service-story--${composition}`]}>
       <div class="rv">
         <h2>Was Sie erwartet</h2>
         {service.description.map((p) => <p class="muted">{p}</p>)}

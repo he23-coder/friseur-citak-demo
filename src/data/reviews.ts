@@ -11,6 +11,8 @@ export interface Review {
   source: string;
 }
 
+export const reviewVerificationDate = '28.07.2026';
+
 export const reviews: Review[] = [
   {
     author: 'Hannah Schuhmann',

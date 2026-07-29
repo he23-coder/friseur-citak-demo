@@ -18,7 +18,6 @@ interface Props {
   canonicalPath?: string;
   ogImage?: string;
   schema?: object | object[];
-  noindex?: boolean;
 }
 
 const {
@@ -27,7 +26,6 @@ const {
   canonicalPath = Astro.url.pathname,
   ogImage = '/og-image.jpg',
   schema,
-  noindex = false,
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL('https://friseur-citak-demo.geraldhe21.workers.dev');
@@ -91,7 +89,7 @@ const orgSchema = {
     </script>
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
+    <meta name="robots" content="noindex, nofollow, noarchive" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
@@ -172,16 +170,9 @@ const orgSchema = {
       // Header-Scrollzustand
       (function () {
         var header = document.querySelector('.site-header');
-        var lastY = window.scrollY;
         function onScroll() {
           var y = window.scrollY;
-          header?.classList.toggle('is-scrolled', y > 40);
-          if (y > 500 && y > lastY && !header?.classList.contains('menu-open')) {
-            header?.classList.add('is-hidden');
-          } else {
-            header?.classList.remove('is-hidden');
-          }
-          lastY = y;
+          header?.classList.toggle('is-scrolled', y > 32);
         }
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
@@ -190,7 +181,7 @@ const orgSchema = {
       // Sticky-Bar-Sichtbarkeit
       (function () {
         var bar = document.querySelector('.sticky-bar');
-        function onScroll() { bar?.classList.toggle('is-visible', window.scrollY > 320); }
+        function onScroll() { bar?.classList.toggle('is-visible', window.scrollY > 180); }
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
       })();

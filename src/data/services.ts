@@ -503,6 +503,320 @@ export const services: Service[] = [
       'Extensions mit Ultraschall von Great Lengths – ausgezeichneter Salon. Haarverlängerung, Verdichtung & GL Volume. Beratungstermin sichern.',
     featured: true,
   },
+  {
+    slug: 'brautstyling',
+    name: 'Brautstyling & Brautfrisur',
+    category: 'Schnitt & Styling',
+    tagline: 'Brautfrisur, Probesteckfrisur und typgerechtes Make-up',
+    intro:
+      'Ein abgestimmter Look für den Hochzeitstag: Die veröffentlichte Brautleistung verbindet Frisur, Probestecken und typgerechtes Make-up.',
+    description: [
+      'Zum Brautangebot gehören laut den Preislisten der Salons Mannheim und Weinheim die Brautfrisur, eine Probesteckfrisur und typgerechtes Make-up.',
+      'Im Probetermin lässt sich der gewünschte Look vor dem Hochzeitstag besprechen und vorbereiten. Weitere Wünsche und der konkrete Ablauf werden persönlich abgestimmt.',
+    ],
+    benefits: [
+      'Brautfrisur mit Finish',
+      'Probesteckfrisur im Leistungsumfang',
+      'Typgerechtes Make-up',
+      'Persönliche Abstimmung vor dem Hochzeitstag',
+    ],
+    audience: 'Für Bräute, die Frisur und Make-up als abgestimmte Salonleistung planen möchten.',
+    image: 'brautfrisur.jpg',
+    imageAlt: 'Brautfrisur von Hair Lounge by Citak',
+    related: ['hochsteckfrisur', 'make-up', 'styling'],
+    faq: [
+      {
+        q: 'Was kostet das veröffentlichte Brautpaket?',
+        a: 'Die Preislisten für Mannheim und Weinheim nennen 299 € für Brautfrisur inklusive Probesteckfrisur und typgerechtem Make-up. Preise können je nach Aufwand variieren.',
+      },
+      {
+        q: 'Ist eine Probesteckfrisur enthalten?',
+        a: 'Ja. Die Probesteckfrisur ist in der veröffentlichten Brautleistung ausdrücklich enthalten.',
+      },
+    ],
+    metaTitle: 'Brautstyling & Brautfrisur in Mannheim und Weinheim',
+    metaDescription:
+      'Brautfrisur inklusive Probesteckfrisur und typgerechtem Make-up bei Hair Lounge by Citak. Persönliche Beratung in Mannheim und Weinheim.',
+  },
+  {
+    slug: 'hochsteckfrisur',
+    name: 'Hochsteckfrisur',
+    category: 'Schnitt & Styling',
+    tagline: 'Elegantes Event-Styling mit Finish',
+    intro:
+      'Für Feiern und besondere Anlässe führen beide aktiven Salons Hochsteckfrisuren mit Finish in ihren Preislisten.',
+    description: [
+      'Die Hochsteckfrisur wird als eigene Leistung mit Finish angeboten. Der gewünschte Stil und der notwendige Aufwand werden vorab persönlich abgestimmt.',
+      'Da die Ausführung vom Anlass, der Haarlänge und dem gewünschten Look abhängt, veröffentlichen die Salons hierfür keinen festen Preis.',
+    ],
+    benefits: [
+      'Eigenständige Styling-Leistung',
+      'Finish im Leistungsumfang',
+      'Persönliche Abstimmung des Wunschlooks',
+      'Preis transparent auf Anfrage',
+    ],
+    audience: 'Für Kund:innen, die zu einem besonderen Anlass eine professionelle Hochsteckfrisur wünschen.',
+    image: 'brautfrisur.jpg',
+    imageAlt: 'Elegante Hochsteckfrisur von Hair Lounge by Citak',
+    related: ['brautstyling', 'make-up', 'beach-waves'],
+    faq: [
+      {
+        q: 'Was kostet eine Hochsteckfrisur?',
+        a: 'Die aktuellen Preislisten nennen „auf Anfrage“. Bitte stimmen Sie Anlass, Haarlänge und gewünschten Look direkt mit dem Salon ab.',
+      },
+    ],
+    metaTitle: 'Hochsteckfrisur in Mannheim & Weinheim | Hair Lounge by Citak',
+    metaDescription:
+      'Hochsteckfrisur mit Finish für besondere Anlässe. Preis und Ablauf auf Anfrage in Mannheim oder Weinheim abstimmen.',
+  },
+  {
+    slug: 'make-up',
+    name: 'Make-up',
+    category: 'Pflege & Extras',
+    tagline: 'Typgerechtes Make-up als Ergänzung zum Styling',
+    intro:
+      'Hair Lounge by Citak führt Make-up als buchbare Leistung und als Bestandteil des veröffentlichten Brautpakets.',
+    description: [
+      'Das Make-up wird passend zum gewünschten Gesamtlook abgestimmt. Auf der Originalwebsite wird es als Ergänzung zum Brautstyling sowie in den Preislisten der aktiven Salons aufgeführt.',
+      'Für Tages- und Abend-Make-up veröffentlichen Mannheim und Weinheim derzeit keine getrennten festen Preise. Die konkrete Ausführung und der Preis werden deshalb vorab angefragt.',
+    ],
+    benefits: [
+      'Typgerechte Abstimmung',
+      'Passend zu Frisur und Anlass',
+      'Im Brautpaket enthalten',
+      'Einzelleistung auf Anfrage',
+    ],
+    audience: 'Für Kund:innen, die ihr Styling mit einem typgerechten Make-up ergänzen möchten.',
+    image: 'brautfrisur.jpg',
+    imageAlt: 'Brautstyling mit typgerechtem Make-up',
+    related: ['brautstyling', 'hochsteckfrisur', 'styling'],
+    faq: [
+      {
+        q: 'Bietet Hair Lounge Tages- und Abend-Make-up an?',
+        a: 'Make-up ist als Leistung belegt. Die aktiven Salonseiten unterscheiden aktuell jedoch nicht öffentlich zwischen Tages- und Abend-Make-up; Preis und Ausführung erhalten Sie daher auf Anfrage.',
+      },
+    ],
+    metaTitle: 'Make-up in Mannheim & Weinheim | Hair Lounge by Citak',
+    metaDescription:
+      'Typgerechtes Make-up passend zu Frisur und Anlass. Einzelbuchung auf Anfrage oder als Teil des Brautstylings.',
+  },
+  {
+    slug: 'beach-waves',
+    name: 'Beach Waves',
+    category: 'Schnitt & Styling',
+    tagline: 'Natürlich wirkende Wellen mit dem GHD Glätteisen',
+    intro:
+      'Moderne, natürliche Beach Waves gehören ausdrücklich zum Styling-Angebot der Hair Lounge by Citak.',
+    description: [
+      'Die Originalwebsite beschreibt Beach Waves als Styling mit dem GHD Glätteisen. Der Look wird im Rahmen des individuellen Stylings erarbeitet.',
+      'Die passende Ausführung richtet sich nach Haar und gewünschtem Finish und wird beim Termin abgestimmt.',
+    ],
+    benefits: [
+      'Veröffentlichte Styling-Leistung',
+      'Ausarbeitung mit dem GHD Glätteisen',
+      'Natürlich wirkender Wellen-Look',
+      'Individuelles Finish',
+    ],
+    audience: 'Für Kund:innen, die sich moderne, natürliche Wellen als professionelles Styling wünschen.',
+    image: 'styling.png',
+    imageAlt: 'Professionelles Styling mit voluminösen Wellen',
+    related: ['styling', 'hochsteckfrisur', 'glossing'],
+    faq: [
+      {
+        q: 'Wie werden die Beach Waves gestylt?',
+        a: 'Die Originalwebsite nennt hierfür das GHD Glätteisen. Die konkrete Ausführung wird passend zum Haar und zum gewünschten Look abgestimmt.',
+      },
+    ],
+    metaTitle: 'Beach Waves in Mannheim & Weinheim | Hair Lounge by Citak',
+    metaDescription:
+      'Moderne, natürliche Beach Waves mit dem GHD Glätteisen. Individuelles Styling in Mannheim oder Weinheim anfragen.',
+  },
+  {
+    slug: 'bartstyling',
+    name: 'Bartstyling',
+    category: 'Schnitt & Styling',
+    tagline: 'Gepflegter Bart als Teil des Barber-Angebots',
+    intro:
+      'Die Hair Lounge nennt einen gestylten Bart ausdrücklich als Teil ihres Barber-Angebots für Mannheim und Weinheim.',
+    description: [
+      'Das Bartstyling ergänzt das veröffentlichte Angebot für Herren. Der gewünschte Stil und der notwendige Aufwand werden direkt mit dem Team abgestimmt.',
+      'Ein eigenständiger Festpreis ist auf den aktuellen Preislisten nicht veröffentlicht. Deshalb bleibt der Preis transparent auf Anfrage.',
+    ],
+    benefits: [
+      'Teil des veröffentlichten Barber-Angebots',
+      'Abstimmung des gewünschten Stils',
+      'Kombinierbar mit einem Herrenhaarschnitt',
+      'Preis auf Anfrage',
+    ],
+    audience: 'Für Herren, die ihren Bart professionell in Form bringen lassen möchten.',
+    image: 'herrenhaarschnitt.jpg',
+    imageAlt: 'Barber-Produkte bei Hair Lounge by Citak',
+    related: ['herrenhaarschnitt', 'fade-cut', 'grauhaarveredelung'],
+    faq: [
+      {
+        q: 'Was kostet das Bartstyling?',
+        a: 'Für Bartstyling ist derzeit kein eigenständiger Preis veröffentlicht. Bitte fragen Sie den gewünschten Umfang direkt im Salon an.',
+      },
+    ],
+    metaTitle: 'Bartstyling in Mannheim & Weinheim | Hair Lounge by Citak',
+    metaDescription:
+      'Bartstyling als Teil des Barber-Angebots von Hair Lounge by Citak. Umfang und Preis in Mannheim oder Weinheim anfragen.',
+  },
+  {
+    slug: 'keratinglaettung',
+    name: 'Keratinglättung',
+    category: 'Pflege & Extras',
+    tagline: 'Technik, spezielle Finishbehandlung und Styling',
+    intro:
+      'Die Keratinglättung ist in den veröffentlichten Preislisten beider aktiven Salons als Permanent-Styling-Leistung aufgeführt.',
+    description: [
+      'Die veröffentlichte Leistung umfasst die Keratinglättung, die entsprechende Technik, eine spezielle Finishbehandlung und das abschließende Styling.',
+      'Weitere Aussagen zur Eignung, Haltbarkeit oder zum individuellen Ergebnis werden bewusst erst nach persönlicher Beratung getroffen.',
+    ],
+    benefits: [
+      'Veröffentlichte Permanent-Styling-Leistung',
+      'Spezielle Finishbehandlung',
+      'Abschließendes Styling',
+      'Persönliche Beratung vor der Behandlung',
+    ],
+    audience: 'Für Kund:innen, die sich zur Keratinglättung persönlich und typgerecht beraten lassen möchten.',
+    image: 'repair-cut.jpg',
+    imageAlt: 'Pflegeprodukte für eine professionelle Haarbehandlung',
+    related: ['haarglaettung-straighten-it', 'dauerwelle-curl-it', 'repair-cut'],
+    faq: [
+      {
+        q: 'Was kostet die Keratinglättung?',
+        a: 'Die Preislisten für Mannheim und Weinheim nennen 249 € bis Kinnlänge und 299 € ab Kinnlänge. Preise können je nach Aufwand und Produktmenge variieren.',
+      },
+    ],
+    metaTitle: 'Keratinglättung in Mannheim & Weinheim | Hair Lounge by Citak',
+    metaDescription:
+      'Keratinglättung mit spezieller Finishbehandlung und Styling. Verifizierte Preise und persönliche Beratung in Mannheim und Weinheim.',
+  },
+  {
+    slug: 'dauerwelle-curl-it',
+    name: 'Dauerwelle · Curl It',
+    category: 'Schnitt & Styling',
+    tagline: 'Permanent Styling mit Curl-It-Technik',
+    intro:
+      '„Curl It (Dauerwelle)“ ist in Mannheim und Weinheim als eigene Permanent-Styling-Technik veröffentlicht.',
+    description: [
+      'Die Salonpreislisten nennen eine individuelle Beratung, die Curl-It-Technik für die Dauerwelle, eine spezielle Finishbehandlung und das Styling.',
+      'Welche Ausführung zum Haar und zum gewünschten Look passt, wird im persönlichen Beratungsgespräch geklärt.',
+    ],
+    benefits: [
+      'Individuelle Beratung',
+      'Veröffentlichte Curl-It-Technik',
+      'Spezielle Finishbehandlung',
+      'Styling im Leistungsumfang',
+    ],
+    audience: 'Für Kund:innen, die sich für eine Dauerwelle mit der veröffentlichten Curl-It-Technik interessieren.',
+    image: 'styling.png',
+    imageAlt: 'Voluminöses Styling bei Hair Lounge by Citak',
+    related: ['styling', 'beach-waves', 'haarglaettung-straighten-it'],
+    faq: [
+      {
+        q: 'Was kostet Curl It beziehungsweise eine Dauerwelle?',
+        a: 'Die aktiven Salonseiten nennen 89 € bis Kinnlänge und 139 € ab Kinnlänge. Preise können je nach Aufwand und Produktmenge variieren.',
+      },
+    ],
+    metaTitle: 'Dauerwelle & Curl It in Mannheim und Weinheim',
+    metaDescription:
+      'Dauerwelle mit Curl-It-Technik, Beratung, spezieller Finishbehandlung und Styling bei Hair Lounge by Citak.',
+  },
+  {
+    slug: 'haarglaettung-straighten-it',
+    name: 'Haarglättung · Straighten It',
+    category: 'Schnitt & Styling',
+    tagline: 'Permanent Styling mit Straighten-It-Technik',
+    intro:
+      '„Straighten It (Haarglättung)“ ist in den aktuellen Preislisten von Mannheim und Weinheim als eigene Technik aufgeführt.',
+    description: [
+      'Die veröffentlichte Leistung verbindet individuelle Beratung, die Straighten-It-Technik, eine spezielle Finishbehandlung und das Styling.',
+      'Die Eignung und die passende Ausführung werden persönlich beraten; nicht veröffentlichte Ergebnis- oder Haltbarkeitsversprechen werden nicht gemacht.',
+    ],
+    benefits: [
+      'Individuelle Beratung',
+      'Veröffentlichte Straighten-It-Technik',
+      'Spezielle Finishbehandlung',
+      'Styling im Leistungsumfang',
+    ],
+    audience: 'Für Kund:innen, die sich zur Straighten-It-Haarglättung persönlich beraten lassen möchten.',
+    image: 'styling.png',
+    imageAlt: 'Professionelles Finish bei Hair Lounge by Citak',
+    related: ['keratinglaettung', 'dauerwelle-curl-it', 'styling'],
+    faq: [
+      {
+        q: 'Was kostet Straighten It beziehungsweise die Haarglättung?',
+        a: 'Die aktiven Salonseiten nennen 89 € bis Kinnlänge und 159 € ab Kinnlänge. Preise können je nach Aufwand und Produktmenge variieren.',
+      },
+    ],
+    metaTitle: 'Haarglättung & Straighten It in Mannheim und Weinheim',
+    metaDescription:
+      'Haarglättung mit Straighten-It-Technik, Beratung, spezieller Finishbehandlung und Styling bei Hair Lounge by Citak.',
+  },
+  {
+    slug: 'olaplex',
+    name: 'Olaplex-Behandlung',
+    category: 'Pflege & Extras',
+    tagline: 'Veröffentlichte Zusatzbehandlung in beiden Salons',
+    intro:
+      'Olaplex gehört zum veröffentlichten Sortiment und wird in Mannheim und Weinheim als eigene Behandlung geführt.',
+    description: [
+      'Die Olaplex-Behandlung ist in den Preislisten beider aktiven Salons als Zusatzleistung aufgeführt. Olaplex wird außerdem als Produktpartner der Hair Lounge genannt.',
+      'Die konkrete Kombination mit einer Farb-, Schnitt- oder Styling-Leistung wird persönlich abgestimmt.',
+    ],
+    benefits: [
+      'In beiden aktiven Salons veröffentlicht',
+      'Olaplex als genannter Produktpartner',
+      'Kombination nach persönlicher Beratung',
+      'Veröffentlichter Preis von 25 €',
+    ],
+    audience: 'Für Kund:innen, die eine Olaplex-Behandlung als Ergänzung zu ihrem Salontermin wünschen.',
+    image: 'repair-cut.jpg',
+    imageAlt: 'Professionelle Haarpflegeprodukte im Salon',
+    related: ['repair-cut', 'coloration', 'glossing'],
+    faq: [
+      {
+        q: 'Was kostet die Olaplex-Behandlung?',
+        a: 'Die aktuellen Preislisten von Mannheim und Weinheim nennen 25 €. Preise können je nach Aufwand und Produktmenge variieren.',
+      },
+    ],
+    metaTitle: 'Olaplex-Behandlung in Mannheim & Weinheim',
+    metaDescription:
+      'Olaplex-Behandlung bei Hair Lounge by Citak in Mannheim und Weinheim. Veröffentlichung als Zusatzleistung für 25 €.',
+  },
+  {
+    slug: 'grauhaarveredelung',
+    name: 'Grauhaarveredelung',
+    category: 'Farbe & Strähnen',
+    tagline: 'Veröffentlichte Farbleistung für Herren',
+    intro:
+      'Die Grauhaarveredelung wird in den Herren-Preislisten von Mannheim und Weinheim als eigene Leistung geführt.',
+    description: [
+      'Die veröffentlichte Herrenleistung richtet sich an Kund:innen, die sich zur Veredelung grauer Haare beraten lassen möchten.',
+      'Details zur gewünschten Nuance und zur Ausführung werden im Salon abgestimmt. Die Website macht bewusst keine darüber hinausgehenden Ergebnisversprechen.',
+    ],
+    benefits: [
+      'Eigene veröffentlichte Herrenleistung',
+      'In Mannheim und Weinheim verfügbar',
+      'Persönliche Abstimmung',
+      'Veröffentlichter Preis von 30 €',
+    ],
+    audience: 'Für Herren, die ihre grauen Haare im Salon veredeln lassen möchten.',
+    image: 'herrenhaarschnitt.jpg',
+    imageAlt: 'Professionelle Produkte für Herren im Salon',
+    related: ['herrenhaarschnitt', 'bartstyling', 'coloration'],
+    faq: [
+      {
+        q: 'Was kostet die Grauhaarveredelung?',
+        a: 'Die aktuellen Herren-Preislisten von Mannheim und Weinheim nennen 30 €. Preise können je nach Aufwand variieren.',
+      },
+    ],
+    metaTitle: 'Grauhaarveredelung in Mannheim & Weinheim',
+    metaDescription:
+      'Grauhaarveredelung als veröffentlichte Herrenleistung bei Hair Lounge by Citak in Mannheim und Weinheim.',
+  },
 ];
 
 export const categories = ['Schnitt & Styling', 'Farbe & Strähnen', 'Pflege & Extras', 'Extensions'] as const;
