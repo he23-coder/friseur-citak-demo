@@ -70,11 +70,19 @@ npm run test:visual
 
 ## Despliegue
 
-El destino debe seguir siendo el Worker existente:
+Cada push a `main` despliega solo mediante `.github/workflows/deploy.yml`. También se
+puede lanzar a mano desde la pestaña **Actions** → *Deploy Worker* → **Run workflow**.
+
+El destino debe seguir siendo el Worker existente. Para desplegar en local:
 
 ```bash
 npm run deploy
 ```
+
+Requiere `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` en el entorno. El detalle de
+dónde viven las credenciales, qué permisos lleva el token y cómo administrar Cloudflare
+está en [`AGENTS.md`](AGENTS.md), que es también el fichero de instrucciones para
+agentes de IA.
 
 El formulario no simula un envío cuando faltan credenciales. La configuración requerida
 está en [`docs/contact-form-setup.md`](docs/contact-form-setup.md).
