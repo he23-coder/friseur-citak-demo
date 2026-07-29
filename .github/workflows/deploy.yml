@@ -1,0 +1,54 @@
+name: Deploy Worker
+
+# Despliega la demo al Worker existente friseur-citak-demo.
+# Se ejecuta en cada push a main y tambien a mano desde la pestana Actions.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Un despliegue a la vez: si llegan dos pushes seguidos, el segundo espera
+# en lugar de pisar al primero a medias.
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # npm run deploy = astro build && wrangler deploy, tal como se hace en local.
+      - name: Build y deploy al Worker
+        run: npm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Comprobar que la demo responde
+        run: |
+          for intento in 1 2 3 4 5; do
+            codigo=$(curl -s -o /dev/null -w '%{http_code}' \
+              https://friseur-citak-demo.geraldhe21.workers.dev/)
+            echo "Intento $intento: HTTP $codigo"
+            [ "$codigo" = "200" ] && exit 0
+            sleep 5
+          done
+          echo "La demo no devolvio 200 despues del despliegue"
+          exit 1
